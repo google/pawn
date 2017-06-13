@@ -1,0 +1,37 @@
+// Copyright 2014-2017 Google Inc. All Rights Reserved.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+#include "third_party/zynamics/pawn/bits.h"
+#include "third_party/zynamics/pawn/chipset_intel_6_series.h"
+#include "third_party/zynamics/pawn/pci.h"
+#include "third_party/zynamics/pawn/physical_memory.h"
+
+namespace security {
+namespace zynamics {
+
+Intel6SeriesChipset::Intel6SeriesChipset(const Chipset::HardwareId& probed_id,
+                                         Pci* pci)
+    : IntelIch10Chipset(probed_id, pci) {}
+
+Chipset::Gcs Intel6SeriesChipset::ReadGcsRegister() {
+  auto gcs = rcrb_mem()->ReadUint32(kGcsRegister);
+  return {
+      static_cast<Chipset::BootBiosStraps>(
+          bits::Value<11, 10>(gcs)),  // BBS, 6-Series, these bits map directly.
+      bits::Test<0>(gcs),             // BILD
+  };
+}
+
+}  // namespace zynamics
+}  // namespace security
