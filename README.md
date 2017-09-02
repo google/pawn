@@ -1,4 +1,4 @@
-# Pawn BIOS Dumping Tool
+# Pawn BIOS Dumping Tool [![Build Status](https://api.travis-ci.org/google/pawn.svg?branch=master)](https://travis-ci.org/google/pawn)
 
 Copyright 2014-2017 Google Inc.
 
