@@ -16,30 +16,39 @@
 
 this_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
+# Source meta
+version = 0.1
+source_only_tgz = ../pawn_$(version).orig.tar.xz
+
 # Directory with build artifacts. Should not contain spaces.
 build_dir := $(this_dir)/.build
 
 # Default flags (all targets)
-CPPFLAGS += "-iquote$(build_dir)"
-CXXFLAGS += -std=c++11
-LDFLAGS +=
+override CPPFLAGS += "-iquote$(build_dir)"
+override CXXFLAGS += -std=c++11
+override LDFLAGS +=
 
 # Feature: Debug build
 ifndef DEBUG
-CPPFLAGS += \
+override CPPFLAGS += \
 	-DNDEBUG
-CXXFLAGS += \
+override CXXFLAGS += \
 	-O2 \
 	-g0 -static
-LDFLAGS += \
+override LDFLAGS += \
 	-Wl,--gc-sections \
 	-Wl,--strip-all \
 	-Wl,-Bstatic \
 	-static-libstdc++
 else
-CXXFLAGS += \
+override CXXFLAGS += \
 	-ggdb
-LDFLAGS +=
+override LDFLAGS +=
+endif
+
+# Feature: Verbose build
+ifndef VERBOSE
+V = @
 endif
 
 # Rules
@@ -59,33 +68,35 @@ pawn_sources := \
 	physical_memory.cc
 pawn_obj := $(addprefix $(build_dir)/,$(pawn_sources:.cc=.o))
 
+.PHONY: all
 all: pawn
 
+.PHONY: help
 help:
 	@echo 'Make targets:'
-	@echo '    clean            Remove object files'
-	@echo '    distclean        Remove all build artifacts'
+	@echo '    clean            Remove all build artifacts'
+	@echo '    deb              Build Debian package'
+	@echo '    debclean         Remove packaging artifacts'
+	@echo '    debsource        Create source tarball for packaging'
 	@echo '    pawn             BIOS/firmware dumping tool'
 	@echo
 	@echo 'Feature flags:'
 	@echo '    DEBUG            Build with debug symbols'
 	@echo
 
+.PHONY: clean
 clean:
-	@find "$(build_dir)" -depth -name *.o -delete || true
-
-distclean:
-	@rm -rf "$(build_dir)"
+	$(V)rm -rf "$(build_dir)"
 
 $(build_dir):
-	@mkdir -p "$(build_dir)/third_party/zynamics"
-	@ln -sf "$(this_dir)" "$(build_dir)/third_party/zynamics/pawn"
+	$(V)mkdir -p "$(build_dir)/third_party/zynamics"
+	$(V)ln -sf "$(this_dir)" "$(build_dir)/third_party/zynamics/pawn"
 
 $(pawn_obj): | $(build_dir)
 
 $(build_dir)/pawn: $(pawn_obj)
-	@echo "    [Link]    $@"
-	@$(CXX) $(pawn_obj) \
+	@echo "  [Link]      $@"
+	$(V)$(CXX) $(pawn_obj) \
 	    $(CXXFLAGS) \
 	    $(LDFLAGS) \
 	    -o$@
@@ -96,8 +107,32 @@ pawn: $(build_dir)/pawn
 
 # Implicit Rules
 $(build_dir)/%.o: %.cc
-	@echo "    [Compile] $@"
-	@$(CXXCOMPILE) $(CXXFLAGS) -c -o$@ $<
+	@echo "  [Compile]   $@"
+	$(V)$(CXXCOMPILE) $(CXXFLAGS) -c -o$@ $<
 
-.PHONY: all clean distclean help pawn
+$(source_only_tgz): clean
+	@echo "  [Archive]   $@"
+	$(V)tar -C "$(this_dir)" -caf "$@" \
+		--transform=s,^,pawn-$(version)/, \
+		--exclude=.build/* --exclude=.build \
+		--exclude=.git/* --exclude=.git \
+		--exclude=debian/* --exclude=debian \
+		"--exclude=$@" \
+		--exclude-vcs-ignores \
+		.??* *
 
+# Create a source tarball without the debian/ subdirectory
+.PHONY: debsource
+debsource: $(source_only_tgz)
+
+# debuild signs the package iff DEBFULLNAME, DEBEMAIL and DEB_SIGN_KEYID are
+# set. Note that if the GPG key includes an alias, it must match the latest
+# entry in debian/changelog.
+deb: debsource
+	@echo "  [Debuild]   Building package"
+	$(V)debuild
+
+.PHONY: debclean
+debclean: clean
+	@echo "  [Deb-Clean] Removing artifacts"
+	$(V)debuild -- clean

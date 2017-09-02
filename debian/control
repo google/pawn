@@ -1,0 +1,15 @@
+Source: pawn
+Maintainer: Christian Blichmann <mail@blichmann.eu>
+Section: admin
+Priority: optional
+Build-Depends: cdbs,make,libc6-dev,linux-libc-dev
+Standards-Version: 3.9.6
+Homepage: https://github.com/cblichmann/jailtime
+
+Package: pawn
+Architecture: amd64
+Depends: ${misc:Depends}
+Description: Extract BIOS firmware from Intel-based machines
+ Pawn is a tool to extract the BIOS firmware from Intel-based workstations and
+ laptops. The name is a play on an internal tool at Google that is also named
+ after a chess piece.
