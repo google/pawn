@@ -160,7 +160,7 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
     if (hsfs.flash_cycle_error && block_read_error) {
       // We may have tried to read a protected area.
       if (!block_read_error(cur_flash_address)) {
-        return util::Status();  // OK
+        return util::OkStatus();
       }
     }
 
@@ -171,13 +171,13 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
     }
     if (!block_read(cur_flash_address,
                     reinterpret_cast<const char*>(buf.data()))) {
-      return util::Status();  // OK
+      return util::OkStatus();
     }
   }
   if (block_read_done) {
     block_read_done();
   }
-  return util::Status();  // OK
+  return util::OkStatus();
 }
 
 Pci* Chipset::pci() {

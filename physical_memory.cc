@@ -54,7 +54,7 @@ util::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
     return util::Status(util::error::FAILED_PRECONDITION,
                         "Could not map physical memory.");
   }
-  return util::Status();  // OK
+  return util::OkStatus();
 }
 
 void* PhysicalMemory::GetAt(int offset) {

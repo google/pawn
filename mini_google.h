@@ -96,8 +96,6 @@ namespace util {
 
 class Status {
  public:
-  class OK;
-
   Status() = default;
   Status(int /* code */, const char* message) : message_(message) {}
 
@@ -109,7 +107,9 @@ class Status {
   std::string message_;
 };
 
-class Status::OK {};
+inline Status OkStatus() {
+  return Status();
+}
 
 namespace error {
 

@@ -39,7 +39,7 @@ util::Status Pci::Init() {
                         "Could not get I/O privileges. Make sure this "
                         "process runs as root and/or has CAP_SYS_RAWIO.");
   }
-  return util::Status();  // OK
+  return util::OkStatus();
 }
 
 enum {
