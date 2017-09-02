@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <cstddef>
 #include <cstdio>
+#include <cstdlib>
 #include <iomanip>
 #include <memory>
 
@@ -69,7 +70,7 @@ int PawnMain(const char* dump_filename) {
          kBootBiosStrapsDesc[gcs.boot_bios_straps]);
   if (gcs.boot_bios_straps != Chipset::kBbsSpi) {
     printf("Error: BIOS not located in SPI flash.\n");
-    return 1;
+    return EXIT_FAILURE;
   }
 
   auto bfpr = chipset->ReadBfprRegister();
@@ -121,7 +122,7 @@ int PawnMain(const char* dump_filename) {
   printf("Flash Descriptor Valid (FDV): %d\n", hsfs.flash_descriptor_valid);
   if (!hsfs.flash_descriptor_valid) {
     printf("Warning: System not in descriptor mode!\n");
-    return 1;
+    return EXIT_FAILURE;
   }
 
   auto* dump = fopen(dump_filename, "wb");
@@ -141,7 +142,7 @@ int PawnMain(const char* dump_filename) {
   auto ssfs = chipset->ReadSsfsRegister();
   if (ssfs.spi_cycle_in_progress) {
     printf("SPI flash cycle in progress");
-    return 1;
+    return EXIT_FAILURE;
   }
 
   QCHECK_OK(chipset->ReadSpiWithHardwareSequencing(
@@ -158,7 +159,7 @@ int PawnMain(const char* dump_filename) {
         return true;
       },
       nullptr /* Ignore block read errors */, [] { printf("\n"); }));
-  return 0;
+  return EXIT_SUCCESS;
 }
 
 }  // anonymous namespace
