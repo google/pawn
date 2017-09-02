@@ -14,7 +14,7 @@ The name is a play on an internal tool that is also named after a chess piece.
 ## How to Build
 
 Dependencies:
-  * Linux (uses /dev/mem)
+  * Linux on x86_64 (uses /dev/mem). FreeBSD might also work.
   * GCC 4.6 or later
   * GNU Make
 
