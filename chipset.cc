@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <vector>
+
 #include "third_party/zynamics/pawn/chipset.h"
 #include "third_party/zynamics/pawn/chipset_intel_ich8.h"
 #include "third_party/zynamics/pawn/chipset_intel_ich9.h"

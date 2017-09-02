@@ -21,7 +21,6 @@
 #include <cstdint>
 #include <iostream>
 #include <string>
-#include <vector>
 
 typedef std::int8_t int8;
 typedef std::uint8_t uint8;
@@ -33,7 +32,6 @@ typedef std::int64_t int64;
 typedef std::uint64_t uint64;
 
 using std::string;
-using std::vector;
 
 namespace zynamics {
 
