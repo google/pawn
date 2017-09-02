@@ -98,8 +98,7 @@ class Status {
  public:
   class OK;
 
-  Status() {}
-
+  Status() = default;
   Status(int /* code */, const char* message) : message_(message) {}
 
   bool ok() { return message_.empty(); }

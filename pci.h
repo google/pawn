@@ -82,7 +82,7 @@ class Pci {
   uint32 ReadConfigUint32(uint32 config_address);
 
  private:
-  Pci();
+  Pci() = default;
   util::Status Init();
 };
 

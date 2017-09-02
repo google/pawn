@@ -20,8 +20,6 @@
 namespace security {
 namespace zynamics {
 
-Pci::Pci() {}
-
 Pci::~Pci() {
   iopl(0 /* Reset to ring 0 access. */);  // Ignore error.
 }

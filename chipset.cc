@@ -31,7 +31,7 @@ namespace zynamics {
 Chipset::Chipset(const Chipset::HardwareId& probed_id, Pci* pci)
     : hardware_id_(probed_id), pci_(pci), rcrb_mem_(nullptr) {}
 
-Chipset::~Chipset() {}
+Chipset::~Chipset() = default;
 
 std::unique_ptr<Chipset> Chipset::Create(Pci* pci,
                                          Chipset::HardwareId* probed_id,
