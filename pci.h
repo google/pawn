@@ -67,6 +67,9 @@ enum {
 // Utility class for accessing the PCI configuration space.
 class Pci {
  public:
+  Pci(const Pci&) = delete;
+  Pci& operator=(const Pci&) = delete;
+
   ~Pci();
 
   static std::unique_ptr<Pci> Create(util::Status* status);
@@ -81,8 +84,6 @@ class Pci {
  private:
   Pci();
   util::Status Init();
-
-  DISALLOW_COPY_AND_ASSIGN(Pci);
 };
 
 }  // namespace zynamics

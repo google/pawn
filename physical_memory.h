@@ -26,6 +26,9 @@ namespace zynamics {
 // Provides access to physical memory.
 class PhysicalMemory {
  public:
+  PhysicalMemory(const PhysicalMemory&) = delete;
+  PhysicalMemory& operator=(const PhysicalMemory&) = delete;
+
   ~PhysicalMemory();
 
   static std::unique_ptr<PhysicalMemory> Create(uintptr_t physical_offset,
@@ -55,8 +58,6 @@ class PhysicalMemory {
   int mem_fd_;
   void* mem_;
   size_t length_;
-
-  DISALLOW_COPY_AND_ASSIGN(PhysicalMemory);
 };
 
 }  // namespace zynamics

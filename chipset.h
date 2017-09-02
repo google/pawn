@@ -191,6 +191,9 @@ class Chipset {
     bool reserved0 : 1;                         // Reserved
   };
 
+  Chipset(const Chipset&) = delete;
+  Chipset& operator=(const Chipset&) = delete;
+
   virtual ~Chipset();
 
   // Creates a new Chipset instance by probing the PCI bus and setting the
@@ -264,8 +267,6 @@ class Chipset {
   HardwareId hardware_id_;
   Pci* pci_;
   std::unique_ptr<PhysicalMemory> rcrb_mem_;
-
-  DISALLOW_COPY_AND_ASSIGN(Chipset);
 };
 
 }  // namespace zynamics

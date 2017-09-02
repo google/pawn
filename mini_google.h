@@ -89,10 +89,6 @@ T&& CheckNotNull(const char* file, int line, const char* message, T&& t) {
 
 }  // namespace zynamics
 
-#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-  TypeName(const TypeName&) = delete; \
-  void operator=(const TypeName&) = delete
-
 template <typename T, size_t N>
 char (&ArraySizeHelper(T (&array)[N]))[N];
 
