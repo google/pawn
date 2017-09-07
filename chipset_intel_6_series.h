@@ -39,6 +39,7 @@ class Intel6SeriesChipset : public IntelIch10Chipset {
             id.device == 0x1D41 /* X79 Express (HP z240) */);
   }
 
+  BiosCntl ReadBiosCntlRegister() override;
   Chipset::Gcs ReadGcsRegister() override;
 
  protected:

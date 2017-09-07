@@ -24,6 +24,18 @@ Intel6SeriesChipset::Intel6SeriesChipset(const Chipset::HardwareId& probed_id,
                                          Pci* pci)
     : IntelIch10Chipset(probed_id, pci) {}
 
+Chipset::BiosCntl Intel6SeriesChipset::ReadBiosCntlRegister() {
+  auto bios_cntl = pci()->ReadConfigUint8(kBiosCntlRegister);
+  return {
+      bits::Test<5>(bios_cntl),  // SMM_BWP
+      bits::Test<4>(bios_cntl),  // TSS
+      static_cast<Chipset::SpiReadConfiguration>(bits::Value<3, 2>(
+          bios_cntl)),           // SRC, these bits map directly for 6 Series
+      bits::Test<1>(bios_cntl),  // BLE
+      bits::Test<0>(bios_cntl),  // BWE
+  };
+}
+
 Chipset::Gcs Intel6SeriesChipset::ReadGcsRegister() {
   auto gcs = rcrb_mem()->ReadUint32(kGcsRegister);
   return {
