@@ -17,12 +17,12 @@
 // Use like this:
 //   // Get access to PCI.
 //   util::Status status;
-//   auto pci(Pci::Create(&status));
+//   auto pci = Pci::Create(&status);
 //   QCHECK_OK(status);
 //   // Get an instance of Chipset for the current hardware.
-//   auto chipset(Chipset::Create(pci.get(),
-//                                nullptr /* Do not fill hardware id */,
-//                                &status);
+//   auto chipset = Chipset::Create(pci.get(),
+//                                  nullptr /* Do not fill hardware id */,
+//                                  &status);
 //   QCHECK_OK(status);
 //   QCHECK_OK(chipset->MapRootComplex(chipset->ReadRcbaRegister())));
 //   ...

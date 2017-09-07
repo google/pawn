@@ -129,7 +129,7 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
                         "Size must be divisible by block size");
   }
 
-  auto hsfs(ReadHsfsRegister());
+  auto hsfs = ReadHsfsRegister();
   if (hsfs.spi_cycle_in_progress) {
     return util::Status(util::error::FAILED_PRECONDITION,
                         "SPI flash cycle in progress");

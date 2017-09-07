@@ -37,7 +37,7 @@ int PawnMain(const char* dump_filename) {
   // We need to access the PCI configuration space, which requires to enable
   // ring-3 I/O privileges. This needs to be done as root.
   printf("Acquiring I/O port read permissions, this may fail...\n");
-  auto pci(Pci::Create(&status));
+  auto pci = Pci::Create(&status);
   QCHECK_OK(status);
 
   // Read chipset vendor and device ids as well as the hardware revision. Hint:
@@ -46,7 +46,7 @@ int PawnMain(const char* dump_filename) {
   //                   display the device name.
   printf("Reading chipset LPC device identification: ");
   Chipset::HardwareId hw_id;
-  auto chipset(Chipset::Create(pci.get(), &hw_id, &status));
+  auto chipset = Chipset::Create(pci.get(), &hw_id, &status);
   // TODO(cblichmann): Deal with Intel's "Compatible Revision Ids". They're
   //                   essentially faking RIDs on boot.
   printf("  VID: 0x%04X  DID: 0x%04X  RID: 0x%02X (%d)\n", hw_id.vendor,
