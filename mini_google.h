@@ -137,8 +137,13 @@ enum {
 }  // namespace error
 }  // namespace util
 
-#define CHECK_OK(status) \
-  if (!(status).ok()) { LOG(FATAL) << status.error_message(); }
+#define CHECK_OK(status)                              \
+  {                                                   \
+    auto zynamics_mg_527c = (status);                 \
+    if (!zynamics_mg_527c.ok()) {                     \
+      LOG(FATAL) << zynamics_mg_527c.error_message(); \
+    }                                                 \
+  }
 #define QCHECK_OK(status) CHECK_OK(status)
 
 #endif  // GOOGLE
