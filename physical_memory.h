@@ -52,12 +52,13 @@ class PhysicalMemory {
   void WriteUint64(int offset, uint64 value);
 
  private:
-  PhysicalMemory();
+  PhysicalMemory() = default;
+
   util::Status Init(uintptr_t physical_offset, size_t length);
 
-  int mem_fd_;
-  void* mem_;
-  size_t length_;
+  int mem_fd_ = -1;  // Error
+  void* mem_ = nullptr;
+  size_t length_ = 0;
 };
 
 }  // namespace zynamics

@@ -98,6 +98,7 @@ class Status {
  public:
   Status() = default;
   Status(int /* code */, const char* message) : message_(message) {}
+  Status(int /* code */, const std::string& message) : message_(message) {}
 
   bool ok() { return message_.empty(); }
 

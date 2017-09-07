@@ -19,11 +19,11 @@
 #include <sys/stat.h>  // open()
 #include <unistd.h>    // close()
 
+#include <cerrno>
+#include <cstring>
+
 namespace security {
 namespace zynamics {
-
-PhysicalMemory::PhysicalMemory()
-    : mem_fd_(-1 /* Error */), mem_(nullptr), length_(0) {}
 
 PhysicalMemory::~PhysicalMemory() {
   munmap(mem_, length_);
@@ -51,8 +51,9 @@ util::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
   mem_ = mmap(nullptr /* Address hint */, length_, PROT_READ | PROT_WRITE,
               MAP_SHARED, mem_fd_, physical_offset);
   if (mem_ == MAP_FAILED) {
+    string error(std::strerror(errno));
     return util::Status(util::error::FAILED_PRECONDITION,
-                        "Could not map physical memory.");
+                        string("Could not map physical memory: ") + error);
   }
   return util::OkStatus();
 }
