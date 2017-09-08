@@ -26,8 +26,12 @@ The following command will extract the BIOS firmware and save the image to
 `bios_image.bin`:
 ```bash
 sudo .build/pawn bios_image.bin
-``` 
+```
 
-You can then use other tools like
+Note: When running a Linux kernel > 4.8.4, make sure that either
+`CONFIG_IO_DEVMEM=n` is set or that you've booted with the `iomem=relaxed`
+boot option.
+
+After extraction, you can then use other tools like
 [UEFITool](https://github.com/LongSoft/UEFITool) to process the firmware
 image further.

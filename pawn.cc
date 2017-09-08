@@ -62,10 +62,20 @@ int PawnMain(const char* dump_filename) {
       "Mapping 16KiB chipset configuration space at RCBA = 0x%8X, this may "
       "fail...\n",
       rcba.base_address);
-  QCHECK_OK(chipset->MapRootComplex(rcba));
+  status = chipset->MapRootComplex(rcba);
+  if (!status.ok()) {
+    printf(
+        "Error: %s\n"
+        "       Check if your kernel was compiled with IO_STRICT_DEVMEM=y.\n"
+        "       On Debian kernels > 4.8.4, boot with iomem=relaxed to\n"
+        "       temporarily disable /dev/mem IO protection.\n",
+        status.error_message().c_str());
+    return EXIT_FAILURE;
+  }
 
   auto gcs = chipset->ReadGcsRegister();
-  const char* kBootBiosStrapsDesc[] = {"LPC", "Reserved", "PCI", "SPI"};
+  constexpr const char* kBootBiosStrapsDesc[] = {"LPC", "Reserved", "PCI",
+                                                 "SPI"};
   printf("Boot BIOS Straps (BBS): %s\n",
          kBootBiosStrapsDesc[gcs.boot_bios_straps]);
   if (gcs.boot_bios_straps != Chipset::kBbsSpi) {
