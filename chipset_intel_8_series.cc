@@ -31,12 +31,13 @@ Chipset::Gcs Intel8SeriesChipset::ReadGcsRegister() {
       Chipset::kBbsSpi};
   constexpr Chipset::BootBiosStraps kIntegratedIoBootBiosStrap[] = {
       Chipset::kBbsSpi, Chipset::kBbsLpc};
-  return {// Integrated on-processor chipsets only use 1-bit for BBS.
-          IsIntegratedIo(hardware_id().device)
-              ? kIntegratedIoBootBiosStrap[bits::Value<10, 10>(
-                    gcs)] /* See Mobile p. 351 */
-              : kBootBiosStraps[bits::Value<11, 10>(gcs)] /* See p. 358 */,
-          bits::Test<0>(gcs),  // BILD
+  return {
+      // Integrated on-processor chipsets only use 1-bit for BBS.
+      IsIntegratedIo()
+          ? kIntegratedIoBootBiosStrap[bits::Value<10, 10>(
+                gcs)] /* See Mobile p. 351 */
+          : kBootBiosStraps[bits::Value<11, 10>(gcs)] /* See p. 358 */,
+      bits::Test<0>(gcs),  // BILD
   };
 }
 

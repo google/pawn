@@ -50,6 +50,12 @@ class Intel9SeriesChipset : public Intel8SeriesChipset {
  protected:
   friend class Chipset;
   Intel9SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
+
+  virtual bool IsIntegratedIo() {
+    // Call the static constexpr version, hence the identical code compared to
+    // Intel8SeriesChipset.
+    return IsIntegratedIo(hardware_id().device);
+  }
 };
 
 }  // namespace zynamics

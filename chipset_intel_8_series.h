@@ -55,6 +55,8 @@ class Intel8SeriesChipset : public Intel7SeriesChipset {
  protected:
   friend class Chipset;
   Intel8SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
+
+  virtual bool IsIntegratedIo() { return IsIntegratedIo(hardware_id().device); }
 };
 
 }  // namespace zynamics
