@@ -17,7 +17,7 @@
 this_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
 # Source meta
-version = 0.1
+version = 0.2
 source_only_tgz = ../pawn_$(version).orig.tar.xz
 
 # Directory with build artifacts. Should not contain spaces.
