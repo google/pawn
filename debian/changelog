@@ -1,3 +1,11 @@
+pawn (0.2-1) unstable; urgency=medium
+
+  * Detect integrated IO on Broadwell
+  * Show actual value of SMM_BWP for PCH chipsets
+  * Show notice about IO_STRICT_DEVMEM kernel config
+
+ -- Christian Blichmann (Secure Email 2017/2018) <mail@blichmann.eu>  Sat, 09 Sep 2017 09:54:41 +0200
+
 pawn (0.1-1) unstable; urgency=medium
 
   * Initial release.
