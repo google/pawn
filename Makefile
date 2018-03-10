@@ -1,4 +1,4 @@
-# Copyright 2014-2017 Google Inc. All Rights Reserved.
+# Copyright 2014-2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -79,9 +79,11 @@ help:
 	@echo '    debclean         Remove packaging artifacts'
 	@echo '    debsource        Create source tarball for packaging'
 	@echo '    pawn             BIOS/firmware dumping tool'
+	@echo '    updatesourcemeta Update copyright years'
 	@echo
 	@echo 'Feature flags:'
 	@echo '    DEBUG            Build with debug symbols'
+	@echo '    VERBOSE          Verbose build output'
 	@echo
 
 .PHONY: clean
@@ -120,6 +122,22 @@ $(source_only_tgz): clean
 		"--exclude=$@" \
 		--exclude-vcs-ignores \
 		.??* *
+
+.PHONY: updatesourcemeta
+updatesourcemeta:
+	@echo "  [Update]    Version and copyright"
+	@for i in \
+		$(addprefix $(this_dir)/,$(pawn_sources)) \
+		$(addprefix $(this_dir)/,$(pawn_sources:.cc=.h)) \
+		$(this_dir)/debian/copyright \
+		$(this_dir)/debian/rules \
+		$(this_dir)/Makefile \
+		$(this_dir)/README.md; \
+	do \
+		sed -i \
+			-e 's/\(Copyright [0-9]\+\)-[0-9]\+/\1-$(shell date +%Y)/' \
+			$$i || true; \
+	done
 
 # Create a source tarball without the debian/ subdirectory
 .PHONY: debsource
