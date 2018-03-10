@@ -36,7 +36,7 @@ util::Status Pci::Init() {
   if (iopl(3 /* Request ring 3 access to all I/O ports. */) !=
             0 /* Success */) {
     return util::Status(util::error::FAILED_PRECONDITION,
-                        "Could not get I/O privileges. Make sure this "
+                        "Failed to acquire I/O privileges. Make sure this "
                         "process runs as root and/or has CAP_SYS_RAWIO.");
   }
   return util::OkStatus();

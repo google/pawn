@@ -35,10 +35,10 @@ class PhysicalMemory {
                                                 size_t length,
                                                 util::Status* status);
 
-  // Raw access to physical memory. See note below.
+  // Provides raw access to physical memory. See note below.
   void* GetAt(int offset);
 
-  // Read and write physical memory in quantities of 1, 2 and 4 bytes at
+  // Reads and writes physical memory in quantities of 1, 2 and 4 bytes at
   // physical location physical_offset + offset.
   // Note: No attempt is made to restrict offset in any way. Accesses beyond
   //       physical_offset + length - 1 will result in SIGSEGV or worse.
