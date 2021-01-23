@@ -23,3 +23,13 @@ endfunction()
 include(FetchContent)
 
 find_package(Git)
+
+# Abseil
+FetchContent_Declare(absl
+  GIT_REPOSITORY https://github.com/abseil/abseil-cpp
+  GIT_TAG        22771d471930ce88e1e75d0ca9dd8c65a7b0f895 # 2021-01-20
+)
+set(ABSL_CXX_STANDARD ${CMAKE_CXX_STANDARD} CACHE STRING "" FORCE)
+set(ABSL_USE_EXTERNAL_GOOGLETEST ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(absl)
+pawn_check_target(absl::core_headers)

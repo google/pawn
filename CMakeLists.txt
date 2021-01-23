@@ -30,15 +30,15 @@ include(CompileOptions)
 include(PawnDeps)
 
 # Find the Git revision number, if applicable
-set(REVISION unknown)
-if(GIT_FOUND)
+set(pawn_REVISION unknown)
+if(Git_FOUND)
   execute_process(COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
                   WORKING_DIRECTORY "${PAWN_SOURCE_DIR}"
-                  OUTPUT_VARIABLE REVISION ERROR_QUIET)
-  if(NOT REVISION STREQUAL "")
-    string(STRIP "${REVISION}" REVISION)
+                  OUTPUT_VARIABLE pawn_REVISION ERROR_QUIET)
+  if(NOT pawn_REVISION STREQUAL "")
+    string(STRIP "${pawn_REVISION}" pawn_REVISION)
   else()
-    set(REVISION internal)
+    set(pawn_REVISION internal)
   endif()
 endif()
 

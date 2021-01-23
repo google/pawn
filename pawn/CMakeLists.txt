@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+configure_file(version.h.in version.h ESCAPE_QUOTES @ONLY)
+
 add_executable(pawn
+  ${CMAKE_CURRENT_BINARY_DIR}/version.h
   bits.h
   chipset.cc
   chipset.h
-  chipset_intel_ich8.cc
-  chipset_intel_ich8.h
-  chipset_intel_ich9.cc
-  chipset_intel_ich9.h
-  chipset_intel_ich10.cc
-  chipset_intel_ich10.h
   chipset_intel_6_series.cc
   chipset_intel_6_series.h
   chipset_intel_7_series.cc
@@ -30,6 +27,12 @@ add_executable(pawn
   chipset_intel_8_series.h
   chipset_intel_9_series.cc
   chipset_intel_9_series.h
+  chipset_intel_ich10.cc
+  chipset_intel_ich10.h
+  chipset_intel_ich8.cc
+  chipset_intel_ich8.h
+  chipset_intel_ich9.cc
+  chipset_intel_ich9.h
   pawn.cc
   pci.cc
   pci.h
@@ -38,6 +41,11 @@ add_executable(pawn
 )
 target_link_libraries(pawn
   pawn_base
+  absl::flags
+  absl::flags_parse
+  absl::flags_usage
+  absl::str_format
+  absl::strings
 )
 
 install(TARGETS pawn DESTINATION ${CMAKE_INSTALL_SBINDIR})
