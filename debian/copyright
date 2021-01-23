@@ -3,7 +3,7 @@ Name: pawn
 Maintainer: Christian Blichmann <mail@blichmann.eu>
 Source: https://github.com/google/pawn
 
-Copyright: 2014-2018 Google LLC.
+Copyright: 2014-2021 Google LLC.
 License: Apache-2.0
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.

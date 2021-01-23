@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SECURITY_ZYNAMICS_PAWN_CHIPSET_INTEL_ICH9_H_
-#define SECURITY_ZYNAMICS_PAWN_CHIPSET_INTEL_ICH9_H_
+#ifndef PAWN_CHIPSET_INTEL_ICH9_H_
+#define PAWN_CHIPSET_INTEL_ICH9_H_
 
-#include "third_party/zynamics/pawn/chipset_intel_ich8.h"
-#include "third_party/zynamics/pawn/pci.h"
+#include "pawn/chipset_intel_ich8.h"
+#include "pawn/pci.h"
 
 namespace security {
 namespace zynamics {
@@ -50,4 +50,4 @@ class IntelIch9Chipset : public IntelIch8Chipset {
 }  // namespace zynamics
 }  // namespace security
 
-#endif  // SECURITY_ZYNAMICS_PAWN_CHIPSET_INTEL_ICH9_H_
+#endif  // PAWN_CHIPSET_INTEL_ICH9_H_

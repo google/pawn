@@ -4,4 +4,5 @@
 .*.swo
 
 # Build artifacts
-.build/
+build/
+obj-x86_64-linux-gnu/

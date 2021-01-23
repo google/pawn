@@ -1,4 +1,4 @@
-// Copyright 2014-2017 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,10 +14,11 @@
 
 // Convenience bit-twiddling routines, implemented as constexpr templates
 // instead of the usual macro hackery.
-// All bit offsets in this file are zero-based.
+// All bit offsets in this file are zero-based and work on little-endian
+// systems only.
 
-#ifndef SECURITY_ZYNAMICS_PAWN_BITS_H_
-#define SECURITY_ZYNAMICS_PAWN_BITS_H_
+#ifndef PAWN_BITS_H_
+#define PAWN_BITS_H_
 
 namespace security {
 namespace zynamics {
@@ -64,4 +65,4 @@ constexpr UintT Set(UintT value) {
 }  // namespace zynamics
 }  // namespace security
 
-#endif  // SECURITY_ZYNAMICS_PAWN_BITS_H_
+#endif  // PAWN_BITS_H_

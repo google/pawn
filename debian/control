@@ -2,9 +2,13 @@ Source: pawn
 Maintainer: Christian Blichmann <mail@blichmann.eu>
 Section: admin
 Priority: optional
-Build-Depends: cdbs,make,libc6-dev,linux-libc-dev
+Build-Depends: debhelper-compat (= 13),
+               cmake,
+               make,
+               libc6-dev,
+               linux-libc-dev
 Standards-Version: 3.9.6
-Homepage: https://github.com/cblichmann/jailtime
+Homepage: https://github.com/google/pawn
 
 Package: pawn
 Architecture: amd64

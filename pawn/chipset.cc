@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,16 +14,16 @@
 
 #include <vector>
 
-#include "third_party/zynamics/pawn/chipset.h"
-#include "third_party/zynamics/pawn/chipset_intel_ich8.h"
-#include "third_party/zynamics/pawn/chipset_intel_ich9.h"
-#include "third_party/zynamics/pawn/chipset_intel_ich10.h"
-#include "third_party/zynamics/pawn/chipset_intel_6_series.h"
-#include "third_party/zynamics/pawn/chipset_intel_7_series.h"
-#include "third_party/zynamics/pawn/chipset_intel_8_series.h"
-#include "third_party/zynamics/pawn/chipset_intel_9_series.h"
-#include "third_party/zynamics/pawn/pci.h"
-#include "third_party/zynamics/pawn/physical_memory.h"
+#include "pawn/chipset.h"
+#include "pawn/chipset_intel_ich8.h"
+#include "pawn/chipset_intel_ich9.h"
+#include "pawn/chipset_intel_ich10.h"
+#include "pawn/chipset_intel_6_series.h"
+#include "pawn/chipset_intel_7_series.h"
+#include "pawn/chipset_intel_8_series.h"
+#include "pawn/chipset_intel_9_series.h"
+#include "pawn/pci.h"
+#include "pawn/physical_memory.h"
 
 namespace security {
 namespace zynamics {
