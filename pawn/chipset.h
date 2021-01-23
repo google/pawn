@@ -40,8 +40,7 @@
 
 #include "pawn/mini_google.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 class Pci;
 class PhysicalMemory;
@@ -269,7 +268,6 @@ class Chipset {
   std::unique_ptr<PhysicalMemory> rcrb_mem_;
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // SECURITY_ZYNAMICS_PAWN_CHIPSET_H_

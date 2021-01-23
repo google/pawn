@@ -18,8 +18,7 @@
 #include "pawn/chipset.h"
 #include "pawn/pci.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 // All page references mentioned in this header and its implementation refer to
 // the Intel I/O Controller Hub 8 Family Datasheet, May 2014 (document number
@@ -88,7 +87,6 @@ class IntelIch8Chipset : public Chipset {
   void WriteSsfcRegister(const Chipset::Ssfc& ssfc) override;
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_CHIPSET_INTEL_ICH8_H_

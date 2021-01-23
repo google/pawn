@@ -25,8 +25,7 @@
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 Chipset::Chipset(const Chipset::HardwareId& probed_id, Pci* pci)
     : hardware_id_(probed_id), pci_(pci), rcrb_mem_(nullptr) {}
@@ -191,5 +190,4 @@ PhysicalMemory* Chipset::rcrb_mem() {
   return rcrb_mem_.get();
 }
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn

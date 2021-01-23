@@ -18,8 +18,7 @@
 #include "pawn/chipset_intel_ich8.h"
 #include "pawn/pci.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 // All page references mentioned in this header and its implementation refer to
 // the Intel I/O Controller Hub 9 Family Datasheet, August 2008 (document number
@@ -40,6 +39,7 @@ class IntelIch9Chipset : public IntelIch8Chipset {
 
  protected:
   friend class Chipset;
+
   IntelIch9Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
 
   uint16 SpiBar(int offset) const override {
@@ -47,7 +47,6 @@ class IntelIch9Chipset : public IntelIch8Chipset {
   }
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_CHIPSET_INTEL_ICH9_H_

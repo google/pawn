@@ -17,8 +17,7 @@
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 IntelIch8Chipset::IntelIch8Chipset(const Chipset::HardwareId& probed_id,
                                    Pci* pci)
@@ -230,5 +229,4 @@ Chipset::Ssfc IntelIch8Chipset::ReadSsfcRegister() {
   };
 }
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn

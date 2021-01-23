@@ -24,9 +24,7 @@
 #include "pawn/bits.h"
 #include "pawn/mini_google.h"
 
-namespace security {
-namespace zynamics {
-
+namespace security::pawn {
 namespace pci {
 
 constexpr uint32 MakeConfigAddress(int bus, int device, int function,
@@ -86,7 +84,6 @@ class Pci {
   util::Status Init();
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_PCI_H_

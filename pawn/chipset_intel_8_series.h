@@ -18,8 +18,7 @@
 #include "pawn/chipset_intel_7_series.h"
 #include "pawn/pci.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 // All page references mentioned in this header and its implementation refer to
 // the Intel 8 Series/C220 Series Chipset Datasheet, May 2014 (document number
@@ -54,12 +53,12 @@ class Intel8SeriesChipset : public Intel7SeriesChipset {
 
  protected:
   friend class Chipset;
+
   Intel8SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
 
   virtual bool IsIntegratedIo() { return IsIntegratedIo(hardware_id().device); }
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_CHIPSET_INTEL_8_SERIES_H_

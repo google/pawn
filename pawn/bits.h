@@ -20,9 +20,7 @@
 #ifndef PAWN_BITS_H_
 #define PAWN_BITS_H_
 
-namespace security {
-namespace zynamics {
-namespace bits {
+namespace security::pawn::bits {
 
 // Extracts from "bits" the raw (unshifted) bit pattern between the specified
 // most-significant and least-significant bits (inclusive).
@@ -61,8 +59,6 @@ constexpr UintT Set(UintT value) {
   return (value & ((1 << (kMsb - kLsb + 1)) - 1)) << kLsb;
 }
 
-}  // namespace bits
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn::bits
 
 #endif  // PAWN_BITS_H_

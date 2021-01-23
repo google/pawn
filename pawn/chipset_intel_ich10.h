@@ -18,8 +18,7 @@
 #include "pawn/chipset_intel_ich9.h"
 #include "pawn/pci.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 // All page references mentioned in this header and its implementation refer to
 // the Intel I/O Controller Hub 10 Family Datasheet, October 2008 (document
@@ -39,10 +38,10 @@ class IntelIch10Chipset : public IntelIch9Chipset {
 
  protected:
   friend class Chipset;
+
   IntelIch10Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_CHIPSET_INTEL_ICH10_H_

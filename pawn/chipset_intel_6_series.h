@@ -18,8 +18,7 @@
 #include "pawn/chipset_intel_ich10.h"
 #include "pawn/pci.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 // All page references mentioned in this header and its implementation refer to
 // the Intel 6 Series / C200 Chipset Datasheet, May 2011 (document number
@@ -44,10 +43,10 @@ class Intel6SeriesChipset : public IntelIch10Chipset {
 
  protected:
   friend class Chipset;
+
   Intel6SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_CHIPSET_INTEL_6_SERIES_H_

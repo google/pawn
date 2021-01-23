@@ -22,8 +22,7 @@
 #include <cerrno>
 #include <cstring>
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 PhysicalMemory::~PhysicalMemory() {
   munmap(mem_, length_);
@@ -98,5 +97,4 @@ void PhysicalMemory::WriteUint64(int offset, uint64 value) {
       value;
 }
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
