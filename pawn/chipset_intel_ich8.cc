@@ -80,15 +80,15 @@ Chipset::Hsfs IntelIch8Chipset::ReadHsfsRegister() {
 void IntelIch8Chipset::WriteHsfsRegister(const Chipset::Hsfs& hsfs) {
   rcrb_mem()->WriteUint16(
       SpiBar(kHsfsRegisterOffset),
-      bits::Set<15, 15>(hsfs.flash_configuration_lockdown) |
-          bits::Set<14, 14>(hsfs.flash_descriptor_valid) |
-          bits::Set<13, 13>(hsfs.flash_descriptor_override_pinstrap_status) |
+      bits::Set<15>(hsfs.flash_configuration_lockdown) |
+          bits::Set<14>(hsfs.flash_descriptor_valid) |
+          bits::Set<13>(hsfs.flash_descriptor_override_pinstrap_status) |
           bits::Set<12, 6>(hsfs.reserved12) |
-          bits::Set<5, 5>(hsfs.spi_cycle_in_progress) |
-          bits::Set<4, 3>(static_cast<uint32_t>(hsfs.blocksector_erase_size)) |
-          bits::Set<2, 2>(hsfs.access_error_log) |
-          bits::Set<1, 1>(hsfs.flash_cycle_error) |
-          bits::Set<0, 0>(hsfs.flash_cycle_done));
+          bits::Set<5>(hsfs.spi_cycle_in_progress) |
+          bits::Set<4>(static_cast<uint32_t>(hsfs.blocksector_erase_size)) |
+          bits::Set<2>(hsfs.access_error_log) |
+          bits::Set<1>(hsfs.flash_cycle_error) |
+          bits::Set<0>(hsfs.flash_cycle_done));
 }
 
 Chipset::Hsfc IntelIch8Chipset::ReadHsfcRegister() {
@@ -106,12 +106,12 @@ Chipset::Hsfc IntelIch8Chipset::ReadHsfcRegister() {
 void IntelIch8Chipset::WriteHsfcRegister(const Chipset::Hsfc& hsfc) {
   rcrb_mem()->WriteUint16(
       SpiBar(kHsfcRegisterOffset),
-      bits::Set<15, 15>(hsfc.flash_spi_smi_enable) |
-          bits::Set<14, 14>(hsfc.reserved14) |
+      bits::Set<15>(hsfc.flash_spi_smi_enable) |
+          bits::Set<14>(hsfc.reserved14) |
           bits::Set<13, 8>(hsfc.flash_data_byte_count) |
           bits::Set<7, 3>(hsfc.reserved7) |
           bits::Set<2, 1>(static_cast<uint32_t>(hsfc.flash_cycle)) |
-          bits::Set<0, 0>(hsfc.flash_cycle_go));
+          bits::Set<0>(hsfc.flash_cycle_go));
 }
 
 Chipset::Faddr IntelIch8Chipset::ReadFaddrRegister() {
@@ -127,14 +127,13 @@ void IntelIch8Chipset::WriteFaddrRegister(const Chipset::Faddr& faddr) {
 }
 
 void IntelIch8Chipset::WriteSsfsRegister(const Chipset::Ssfs& ssfs) {
-  rcrb_mem()->WriteUint8(
-      SpiBar(kSsfsRegisterOffset),
-      bits::Set<7, 5>(ssfs.reserved7) |              // Reserved
-          bits::Set<4, 4>(ssfs.access_error_log) |   // AEL
-          bits::Set<3, 3>(ssfs.flash_cycle_error) |  // FCERR
-          bits::Set<2, 2>(ssfs.cycle_done_status) |
-          bits::Set<1, 1>(ssfs.reserved1) |              // Reserved
-          bits::Set<0, 0>(ssfs.spi_cycle_in_progress));  // SCIP
+  rcrb_mem()->WriteUint8(SpiBar(kSsfsRegisterOffset),
+                         bits::Set<7, 5>(ssfs.reserved7) |           // Reserved
+                             bits::Set<4>(ssfs.access_error_log) |   // AEL
+                             bits::Set<3>(ssfs.flash_cycle_error) |  // FCERR
+                             bits::Set<2>(ssfs.cycle_done_status) |
+                             bits::Set<1>(ssfs.reserved1) |  // Reserved
+                             bits::Set<0>(ssfs.spi_cycle_in_progress));  // SCIP
 }
 
 void IntelIch8Chipset::WriteSsfcRegister(const Chipset::Ssfc& ssfc) {
@@ -146,15 +145,15 @@ void IntelIch8Chipset::WriteSsfcRegister(const Chipset::Ssfc& ssfc) {
                                  ssfc.spi_cycle_frequency)));  // SCF
   rcrb_mem()->WriteUint16(
       SpiBar(kSsfcRegisterOffset + 1 /* 1 byte */),
-      bits::Set<15, 15>(ssfc.spi_smi_enable) |                    // SME
-          bits::Set<14, 14>(ssfc.data_cycle) |                    // DS
-          bits::Set<13, 8>(ssfc.data_byte_count) |                // DBC
-          bits::Set<7, 7>(ssfc.reserved7) |                       // Reserved
-          bits::Set<6, 4>(ssfc.cycle_opcode_pointer) |            // COP
-          bits::Set<3, 3>(ssfc.sequence_prefix_opcode_pointer) |  // SPOP
-          bits::Set<2, 2>(ssfc.atomic_cycle_sequence) |           // ACS
-          bits::Set<1, 1>(ssfc.spi_cycle_go) |                    // SCGO
-          bits::Set<0, 0>(ssfc.reserved0));                       // Reserved
+      bits::Set<15>(ssfc.spi_smi_enable) |                     // SME
+          bits::Set<14, 14>(ssfc.data_cycle) |                 // DS
+          bits::Set<13, 8>(ssfc.data_byte_count) |             // DBC
+          bits::Set<7>(ssfc.reserved7) |                       // Reserved
+          bits::Set<6, 4>(ssfc.cycle_opcode_pointer) |         // COP
+          bits::Set<3>(ssfc.sequence_prefix_opcode_pointer) |  // SPOP
+          bits::Set<2>(ssfc.atomic_cycle_sequence) |           // ACS
+          bits::Set<1>(ssfc.spi_cycle_go) |                    // SCGO
+          bits::Set<0>(ssfc.reserved0));                       // Reserved
 }
 
 uint32_t IntelIch8Chipset::ReadFdataNRegister(int register_num) {
