@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef SECURITY_ZYNAMICS_PAWN_PHYSICAL_MEMORY_H_
-#define SECURITY_ZYNAMICS_PAWN_PHYSICAL_MEMORY_H_
+#ifndef PAWN_PHYSICAL_MEMORY_H_
+#define PAWN_PHYSICAL_MEMORY_H_
 
 #include <cstdint>
 #include <memory>
 
-#include "third_party/zynamics/pawn/mini_google.h"
+#include "pawn/mini_google.h"
 
 namespace security {
 namespace zynamics {
@@ -64,4 +64,4 @@ class PhysicalMemory {
 }  // namespace zynamics
 }  // namespace security
 
-#endif  // SECURITY_ZYNAMICS_PAWN_PHYSICAL_MEMORY_H_
+#endif  // PAWN_PHYSICAL_MEMORY_H_

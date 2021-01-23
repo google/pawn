@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "third_party/zynamics/pawn/chipset_intel_ich10.h"
+#include "pawn/chipset_intel_9_series.h"
 
 namespace security {
 namespace zynamics {
 
-IntelIch10Chipset::IntelIch10Chipset(const Chipset::HardwareId& probed_id,
-                                   Pci* pci)
-    : IntelIch9Chipset(probed_id, pci) {}
+Intel9SeriesChipset::Intel9SeriesChipset(const Chipset::HardwareId& probed_id,
+                                         Pci* pci)
+    : Intel8SeriesChipset(probed_id, pci) {}
 
 }  // namespace zynamics
 }  // namespace security

@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@
 #include <functional>
 #include <memory>
 
-#include "third_party/zynamics/pawn/mini_google.h"
+#include "pawn/mini_google.h"
 
 namespace security {
 namespace zynamics {

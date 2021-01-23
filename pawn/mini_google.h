@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,8 @@
 
 // Minimal, header-only implementation of commonly used Google3 utilities.
 
-#ifndef SECURITY_ZYNAMICS_PAWN_MINI_GOOGLE_H_
-#define SECURITY_ZYNAMICS_PAWN_MINI_GOOGLE_H_
+#ifndef PAWN_MINI_GOOGLE_H_
+#define PAWN_MINI_GOOGLE_H_
 
 #ifndef GOOGLE
 #include <cstdint>
@@ -147,4 +147,4 @@ enum {
 #define QCHECK_OK(status) CHECK_OK(status)
 
 #endif  // GOOGLE
-#endif  // SECURITY_ZYNAMICS_PAWN_MINI_GOOGLE_H_
+#endif  // PAWN_MINI_GOOGLE_H_

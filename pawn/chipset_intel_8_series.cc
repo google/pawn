@@ -1,4 +1,4 @@
-// Copyright 2014-2018 Google LLC. All Rights Reserved.
+// Copyright 2014-2021 Google LLC. All Rights Reserved.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "third_party/zynamics/pawn/bits.h"
-#include "third_party/zynamics/pawn/chipset_intel_8_series.h"
-#include "third_party/zynamics/pawn/pci.h"
-#include "third_party/zynamics/pawn/physical_memory.h"
+#include "pawn/bits.h"
+#include "pawn/chipset_intel_8_series.h"
+#include "pawn/pci.h"
+#include "pawn/physical_memory.h"
 
 namespace security {
 namespace zynamics {
