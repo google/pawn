@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "pawn/bits.h"
 #include "pawn/chipset_intel_7_series.h"
+
+#include "pawn/bits.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 

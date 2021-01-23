@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "pawn/bits.h"
 #include "pawn/chipset_intel_ich8.h"
+
+#include "pawn/bits.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
@@ -84,7 +85,7 @@ void IntelIch8Chipset::WriteHsfsRegister(const Chipset::Hsfs& hsfs) {
           bits::Set<13, 13>(hsfs.flash_descriptor_override_pinstrap_status) |
           bits::Set<12, 6>(hsfs.reserved12) |
           bits::Set<5, 5>(hsfs.spi_cycle_in_progress) |
-          bits::Set<4, 3>(static_cast<uint32>(hsfs.blocksector_erase_size)) |
+          bits::Set<4, 3>(static_cast<uint32_t>(hsfs.blocksector_erase_size)) |
           bits::Set<2, 2>(hsfs.access_error_log) |
           bits::Set<1, 1>(hsfs.flash_cycle_error) |
           bits::Set<0, 0>(hsfs.flash_cycle_done));
@@ -109,7 +110,7 @@ void IntelIch8Chipset::WriteHsfcRegister(const Chipset::Hsfc& hsfc) {
           bits::Set<14, 14>(hsfc.reserved14) |
           bits::Set<13, 8>(hsfc.flash_data_byte_count) |
           bits::Set<7, 3>(hsfc.reserved7) |
-          bits::Set<2, 1>(static_cast<uint32>(hsfc.flash_cycle)) |
+          bits::Set<2, 1>(static_cast<uint32_t>(hsfc.flash_cycle)) |
           bits::Set<0, 0>(hsfc.flash_cycle_go));
 }
 
@@ -141,7 +142,7 @@ void IntelIch8Chipset::WriteSsfcRegister(const Chipset::Ssfc& ssfc) {
   // bit is written with the second write.
   rcrb_mem()->WriteUint8(SpiBar(kSsfcRegisterOffset),
                          bits::Set<7, 3>(ssfc.reserved7) |  // Reserved
-                             bits::Set<2, 0>(static_cast<uint32>(
+                             bits::Set<2, 0>(static_cast<uint32_t>(
                                  ssfc.spi_cycle_frequency)));  // SCF
   rcrb_mem()->WriteUint16(
       SpiBar(kSsfcRegisterOffset + 1 /* 1 byte */),
@@ -156,7 +157,7 @@ void IntelIch8Chipset::WriteSsfcRegister(const Chipset::Ssfc& ssfc) {
           bits::Set<0, 0>(ssfc.reserved0));                       // Reserved
 }
 
-uint32 IntelIch8Chipset::ReadFdataNRegister(int register_num) {
+uint32_t IntelIch8Chipset::ReadFdataNRegister(int register_num) {
   if (register_num < 0 || register_num > 16) {
     LOG(FATAL) << "Flash data register out of range (must be in 0..15).";
   }

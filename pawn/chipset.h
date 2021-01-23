@@ -32,9 +32,10 @@
 // Controller Hub (PCH)" datasheet (document number 328904-003) at the time of
 // this writing).
 
-#ifndef SECURITY_ZYNAMICS_PAWN_CHIPSET_H_
-#define SECURITY_ZYNAMICS_PAWN_CHIPSET_H_
+#ifndef PAWN_CHIPSET_H_
+#define PAWN_CHIPSET_H_
 
+#include <cstdint>
 #include <functional>
 #include <memory>
 
@@ -48,9 +49,9 @@ class PhysicalMemory;
 class Chipset {
  public:
   struct HardwareId {
-    uint16 vendor;
-    uint16 device;
-    uint8 revision;
+    uint16_t vendor;
+    uint16_t device;
+    uint8_t revision;
   };
 
   enum SpiReadConfiguration {
@@ -71,8 +72,8 @@ class Chipset {
 
   // Root Complex Base Address Register
   struct Rcba {
-    uint32 base_address;  // BA
-    bool enable;          // EN
+    uint32_t base_address;  // BA
+    bool enable;            // EN
   };
 
   enum BootBiosStraps { kBbsLpc = 0, kBbsReserved, kBbsPci, kBbsSpi };
@@ -85,10 +86,10 @@ class Chipset {
 
   // BIOS Flash Primary Region Register
   struct Bfpr {
-    uint32 reserved31 : 3;                   // Reserved
-    uint32 bios_flash_primary_region_limit;  // PRL
-    uint32 reserved15 : 3;                   // Reserved
-    uint32 bios_flash_primary_region_base;   // PRB
+    uint32_t reserved31 : 3;                   // Reserved
+    uint32_t bios_flash_primary_region_limit;  // PRL
+    uint32_t reserved15 : 3;                   // Reserved
+    uint32_t bios_flash_primary_region_base;   // PRB
   };
 
   enum BlockSectorEraseSize {
@@ -103,7 +104,7 @@ class Chipset {
     bool flash_configuration_lockdown : 1;               // FLOCKDN
     bool flash_descriptor_valid : 1;                     // FDV
     bool flash_descriptor_override_pinstrap_status : 1;  // FDOPSS
-    uint32 reserved12 : 7;                               // Reserved
+    uint32_t reserved12 : 7;                             // Reserved
     bool spi_cycle_in_progress : 1;                      // SCIP
     BlockSectorEraseSize blocksector_erase_size : 2;     // BERASE
     bool access_error_log : 1;                           // AEL
@@ -120,49 +121,49 @@ class Chipset {
 
   // Hardware Sequencing Flash Control Register
   struct Hsfc {
-    bool flash_spi_smi_enable : 1;     // FSMIE
-    bool reserved14 : 1;               // Reserved
-    uint32 flash_data_byte_count : 6;  // FDBC
-    uint32 reserved7 : 5;              // Reserved
-    FlashCycle flash_cycle : 2;        // FCYCLE
-    bool flash_cycle_go : 1;           // FGO
+    bool flash_spi_smi_enable : 1;       // FSMIE
+    bool reserved14 : 1;                 // Reserved
+    uint32_t flash_data_byte_count : 6;  // FDBC
+    uint32_t reserved7 : 5;              // Reserved
+    FlashCycle flash_cycle : 2;          // FCYCLE
+    bool flash_cycle_go : 1;             // FGO
   };
 
   // Flash Address Register
   struct Faddr {
-    uint32 reserved25 : 7;             // Reserved
-    uint32 flash_linear_address : 25;  // FLA
+    uint32_t reserved25 : 7;             // Reserved
+    uint32_t flash_linear_address : 25;  // FLA
   };
 
   // Flash Regions Access Permissions Register
   struct Frap {
-    uint32 bios_master_write_access_grant : 8;  // BMWAG
-    uint32 bios_master_read_access_grant : 8;   // BMRAG
-    uint32 bios_region_write_access : 8;        // BRWA
-    uint32 bios_region_read_access : 8;         // BRRA
+    uint32_t bios_master_write_access_grant : 8;  // BMWAG
+    uint32_t bios_master_read_access_grant : 8;   // BMRAG
+    uint32_t bios_region_write_access : 8;        // BRWA
+    uint32_t bios_region_read_access : 8;         // BRRA
   };
 
   // Flash Region N Register
   struct FregN {
-    uint32 reserved31 : 3;     // Reserved
-    uint32 region_limit : 13;  // RL
-    uint32 reserved15 : 3;     // Reserved
-    uint32 region_base : 13;   // RB
+    uint32_t reserved31 : 3;     // Reserved
+    uint32_t region_limit : 13;  // RL
+    uint32_t reserved15 : 3;     // Reserved
+    uint32_t region_base : 13;   // RB
   };
 
   // Protected Range N Register
   struct PrN {
     bool write_protection_enable : 1;
-    uint32 reserved30 : 2;  // Reserved
-    uint32 protected_range_limit : 13;
+    uint32_t reserved30 : 2;  // Reserved
+    uint32_t protected_range_limit : 13;
     bool read_protection_enable : 1;
-    uint32 reserved14 : 2;  // Reserved
-    uint32 protected_range_base : 13;
+    uint32_t reserved14 : 2;  // Reserved
+    uint32_t protected_range_base : 13;
   };
 
   // Software Sequencing Flash Status Register
   struct Ssfs {
-    uint32 reserved7 : 3;        // Reserved
+    uint32_t reserved7 : 3;      // Reserved
     bool access_error_log : 1;   // AEL
     bool flash_cycle_error : 1;  // FCERR
     bool cycle_done_status : 1;
@@ -170,20 +171,17 @@ class Chipset {
     bool spi_cycle_in_progress : 1;  // SCIP
   };
 
-  enum SpiCycleFrequency {
-    kScf20Mhz = 0,
-    kScf33Mhz
-  };
+  enum SpiCycleFrequency { kScf20Mhz = 0, kScf33Mhz };
 
   // Software Sequencing Flash Control Register
   struct Ssfc {
-    uint32 reserved23 : 5;                      // Reserved
+    uint32_t reserved23 : 5;                    // Reserved
     SpiCycleFrequency spi_cycle_frequency : 3;  // SCF
     bool spi_smi_enable : 1;                    // SME
     bool data_cycle : 1;                        // DS
-    uint32 data_byte_count : 6;                 // DBC
+    uint32_t data_byte_count : 6;               // DBC
     bool reserved7 : 1;                         // Reserved
-    uint32 cycle_opcode_pointer : 3;            // COP
+    uint32_t cycle_opcode_pointer : 3;          // COP
     bool sequence_prefix_opcode_pointer : 1;    // SPOP
     bool atomic_cycle_sequence : 1;             // ACS
     bool spi_cycle_go : 1;                      // SCGO
@@ -220,7 +218,7 @@ class Chipset {
   virtual Hsfs ReadHsfsRegister() = 0;
   virtual Hsfc ReadHsfcRegister() = 0;
   virtual Faddr ReadFaddrRegister() = 0;
-  virtual uint32 ReadFdataNRegister(int register_num) = 0;
+  virtual uint32_t ReadFdataNRegister(int register_num) = 0;
   virtual Frap ReadFrapRegister() = 0;
   virtual FregN ReadFregNRegister(int index) = 0;
   virtual PrN ReadPrNRegister(int index) = 0;
@@ -254,7 +252,7 @@ class Chipset {
   Pci* pci();
 
   // Returns this chipset's SPIBAR value, usually 0x3800.
-  virtual uint16 SpiBar(int offset) const = 0;
+  virtual uint16_t SpiBar(int offset) const = 0;
 
   virtual void WriteHsfsRegister(const Hsfs& hsfs) = 0;
   virtual void WriteHsfcRegister(const Hsfc& hsfc) = 0;
@@ -270,4 +268,4 @@ class Chipset {
 
 }  // namespace security::pawn
 
-#endif  // SECURITY_ZYNAMICS_PAWN_CHIPSET_H_
+#endif  // PAWN_CHIPSET_H_

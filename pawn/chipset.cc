@@ -15,13 +15,14 @@
 #include <vector>
 
 #include "pawn/chipset.h"
-#include "pawn/chipset_intel_ich8.h"
-#include "pawn/chipset_intel_ich9.h"
-#include "pawn/chipset_intel_ich10.h"
+
 #include "pawn/chipset_intel_6_series.h"
 #include "pawn/chipset_intel_7_series.h"
 #include "pawn/chipset_intel_8_series.h"
 #include "pawn/chipset_intel_9_series.h"
+#include "pawn/chipset_intel_ich10.h"
+#include "pawn/chipset_intel_ich8.h"
+#include "pawn/chipset_intel_ich9.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
@@ -134,7 +135,7 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
                         "SPI flash cycle in progress");
   }
 
-  std::vector<uint32> buf(block_size / 4, 0);
+  std::vector<uint32_t> buf(block_size / 4, 0);
   for (int cur_flash_address = flash_address;
        cur_flash_address < flash_address + size;
        cur_flash_address += block_size) {

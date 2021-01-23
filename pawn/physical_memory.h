@@ -41,14 +41,14 @@ class PhysicalMemory {
   // physical location physical_offset + offset.
   // Note: No attempt is made to restrict offset in any way. Accesses beyond
   //       physical_offset + length - 1 will result in SIGSEGV or worse.
-  uint8 ReadUint8(int offset) const;
-  uint16 ReadUint16(int offset) const;
-  uint32 ReadUint32(int offset) const;
-  uint64 ReadUint64(int offset) const;
-  void WriteUint8(int offset, uint8 value);
-  void WriteUint16(int offset, uint16 value);
-  void WriteUint32(int offset, uint32 value);
-  void WriteUint64(int offset, uint64 value);
+  uint8_t ReadUint8(int offset) const;
+  uint16_t ReadUint16(int offset) const;
+  uint32_t ReadUint32(int offset) const;
+  uint64_t ReadUint64(int offset) const;
+  void WriteUint8(int offset, uint8_t value);
+  void WriteUint16(int offset, uint16_t value);
+  void WriteUint32(int offset, uint32_t value);
+  void WriteUint64(int offset, uint64_t value);
 
  private:
   PhysicalMemory() = default;

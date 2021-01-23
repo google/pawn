@@ -17,6 +17,7 @@
 #include <unistd.h>
 
 #include <cstddef>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
@@ -112,7 +113,7 @@ int PawnMain(int argc, char* argv[]) {
                bfpr.bios_flash_primary_region_limit);
 
   auto frap = chipset->ReadFrapRegister();
-  absl::PrintF("FRAP: 0x%08X\n", *reinterpret_cast<uint32*>(&frap));
+  absl::PrintF("FRAP: 0x%08X\n", *reinterpret_cast<uint32_t*>(&frap));
 
   enum { kNumFlashRegions = 5 };
   struct FlashRegion {
@@ -183,7 +184,7 @@ int PawnMain(int argc, char* argv[]) {
 
   QCHECK_OK(chipset->ReadSpiWithHardwareSequencing(
       0 /* Start address */, kMaxFlash, kBlockSize,
-      [&dump](int64 fla, const char* data) -> bool {
+      [&dump](int64_t fla, const char* data) -> bool {
         if (fla / kBlockSize % 256 == 0) {
           absl::PrintF(".");
           fflush(STDIN_FILENO);

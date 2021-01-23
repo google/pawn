@@ -15,6 +15,8 @@
 #ifndef PAWN_CHIPSET_INTEL_9_SERIES_H_
 #define PAWN_CHIPSET_INTEL_9_SERIES_H_
 
+#include <cstdint>
+
 #include "pawn/chipset_intel_8_series.h"
 #include "pawn/pci.h"
 
@@ -27,7 +29,7 @@ namespace security::pawn {
 // 330837-003).
 class Intel9SeriesChipset : public Intel8SeriesChipset {
  public:
-  static constexpr bool IsIntegratedIo(uint16 device) {
+  static constexpr bool IsIntegratedIo(uint16_t device) {
     // Device ids were taken from the mobile datasheet, page 63.
     return (device == 0x9CC1 /* Engineering Sample, U-Processor */ ||
             device == 0x9CC2 /* Engineering Sample, U-Processor */ ||

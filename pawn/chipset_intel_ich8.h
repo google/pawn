@@ -15,6 +15,8 @@
 #ifndef PAWN_CHIPSET_INTEL_ICH8_H_
 #define PAWN_CHIPSET_INTEL_ICH8_H_
 
+#include <cstdint>
+
 #include "pawn/chipset.h"
 #include "pawn/pci.h"
 
@@ -65,7 +67,7 @@ class IntelIch8Chipset : public Chipset {
   Chipset::Hsfs ReadHsfsRegister() override;
   Chipset::Hsfc ReadHsfcRegister() override;
   Chipset::Faddr ReadFaddrRegister() override;
-  uint32 ReadFdataNRegister(int index) override;
+  uint32_t ReadFdataNRegister(int index) override;
   Chipset::Frap ReadFrapRegister() override;
   Chipset::FregN ReadFregNRegister(int index) override;
   Chipset::PrN ReadPrNRegister(int index) override;
@@ -76,7 +78,7 @@ class IntelIch8Chipset : public Chipset {
   friend class Chipset;
   IntelIch8Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
 
-  uint16 SpiBar(int offset) const override {
+  uint16_t SpiBar(int offset) const override {
     return 0x3020 + offset;  // Page 747
   }
 

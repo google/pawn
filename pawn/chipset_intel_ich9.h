@@ -15,6 +15,8 @@
 #ifndef PAWN_CHIPSET_INTEL_ICH9_H_
 #define PAWN_CHIPSET_INTEL_ICH9_H_
 
+#include <cstdint>
+
 #include "pawn/chipset_intel_ich8.h"
 #include "pawn/pci.h"
 
@@ -42,7 +44,7 @@ class IntelIch9Chipset : public IntelIch8Chipset {
 
   IntelIch9Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
 
-  uint16 SpiBar(int offset) const override {
+  uint16_t SpiBar(int offset) const override {
     return 0x3800 + offset;  // Page 821
   }
 };

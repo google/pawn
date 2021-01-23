@@ -15,6 +15,8 @@
 #ifndef PAWN_CHIPSET_INTEL_8_SERIES_H_
 #define PAWN_CHIPSET_INTEL_8_SERIES_H_
 
+#include <cstdint>
+
 #include "pawn/chipset_intel_7_series.h"
 #include "pawn/pci.h"
 
@@ -27,7 +29,7 @@ namespace security::pawn {
 // number 329003).
 class Intel8SeriesChipset : public Intel7SeriesChipset {
  public:
-  static constexpr bool IsIntegratedIo(uint16 device) {
+  static constexpr bool IsIntegratedIo(uint16_t device) {
     // Device ids were taken from the mobile datasheet, page 63.
     return (device == 0x9C41 /* Engineering Sample */ ||
             device == 0x9C43 /* QM87 Premium (i.e. HP EliteBook 840 G1) */ ||
