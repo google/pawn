@@ -16,6 +16,7 @@
 
 #include <cstdint>
 
+#include "absl/status/status.h"
 #include "pawn/pci.h"
 
 #include "pawn/mini_google.h"
@@ -26,22 +27,22 @@ Pci::~Pci() {
   iopl(0 /* Reset to ring 0 access. */);  // Ignore error.
 }
 
-std::unique_ptr<Pci> Pci::Create(util::Status* status) {
+std::unique_ptr<Pci> Pci::Create(absl::Status* status) {
   std::unique_ptr<Pci> pci(new Pci());
   *CHECK_NOTNULL(status) = pci->Init();
   return status->ok() ? std::move(pci) : nullptr;
 }
 
-util::Status Pci::Init() {
+absl::Status Pci::Init() {
   // Note: This will not work on Windows, since there is no official API that
   //       allows to do this. A small kernel driver is needed there.
   if (iopl(3 /* Request ring 3 access to all I/O ports. */) !=
-            0 /* Success */) {
-    return util::Status(util::error::FAILED_PRECONDITION,
-                        "Failed to acquire I/O privileges. Make sure this "
-                        "process runs as root and/or has CAP_SYS_RAWIO.");
+      0 /* Success */) {
+    return absl::FailedPreconditionError(
+        "Failed to acquire I/O privileges. Make sure this "
+        "process runs as root and/or has CAP_SYS_RAWIO.");
   }
-  return util::OkStatus();
+  return absl::OkStatus();
 }
 
 enum {

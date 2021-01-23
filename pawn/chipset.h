@@ -16,7 +16,7 @@
 // between the various chipset generations.
 // Use like this:
 //   // Get access to PCI.
-//   util::Status status;
+//   absl::Status status;
 //   auto pci = Pci::Create(&status);
 //   QCHECK_OK(status);
 //   // Get an instance of Chipset for the current hardware.
@@ -39,6 +39,7 @@
 #include <functional>
 #include <memory>
 
+#include "absl/status/status.h"
 #include "pawn/mini_google.h"
 
 namespace security::pawn {
@@ -198,7 +199,7 @@ class Chipset {
   // Otherwise, status is set accordingly. If probed_id is non-nullptr, it is
   // filled with the PCI hardware id of the chipset's LPC device.
   static std::unique_ptr<Chipset> Create(Pci* pci, HardwareId* probed_id,
-                                         util::Status* status);
+                                         absl::Status* status);
 
   const HardwareId& hardware_id() const;
 
@@ -207,7 +208,7 @@ class Chipset {
   virtual Rcba ReadRcbaRegister() = 0;
 
   // Map the Chipset Configuration Space physical memory.
-  virtual util::Status MapRootComplex(const Rcba& rcba);
+  virtual absl::Status MapRootComplex(const Rcba& rcba);
   void UnMapRootComplex();
 
   // Registers in Chipset Configuration Space (Memory Space).
@@ -233,9 +234,9 @@ class Chipset {
   // read error for any reason (including SPI read protection), block_read_error
   // is called with the current block address. block_read_error may be nullptr.
   // If either of the block_read or block_read_error callbacks return false,
-  // this function stops reading and returns with util::Status::OK.
+  // this function stops reading and returns with absl::OkStatus().
   // block_read_done is called after reading.
-  virtual util::Status ReadSpiWithHardwareSequencing(
+  virtual absl::Status ReadSpiWithHardwareSequencing(
       int flash_address, int size, int block_size,
       std::function<bool(int flash_address, const char* data)> block_read,
       std::function<bool(int flash_address)> block_read_error,

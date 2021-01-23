@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <memory>
 
+#include "absl/status/status.h"
 #include "pawn/mini_google.h"
 
 namespace security::pawn {
@@ -32,7 +33,7 @@ class PhysicalMemory {
 
   static std::unique_ptr<PhysicalMemory> Create(uintptr_t physical_offset,
                                                 size_t length,
-                                                util::Status* status);
+                                                absl::Status* status);
 
   // Provides raw access to physical memory. See note below.
   void* GetAt(int offset);
@@ -53,7 +54,7 @@ class PhysicalMemory {
  private:
   PhysicalMemory() = default;
 
-  util::Status Init(uintptr_t physical_offset, size_t length);
+  absl::Status Init(uintptr_t physical_offset, size_t length);
 
   int mem_fd_ = -1;  // Error
   void* mem_ = nullptr;

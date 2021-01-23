@@ -22,6 +22,7 @@
 #include <cstdint>
 #include <memory>
 
+#include "absl/status/status.h"
 #include "pawn/bits.h"
 #include "pawn/mini_google.h"
 
@@ -71,7 +72,7 @@ class Pci {
 
   ~Pci();
 
-  static std::unique_ptr<Pci> Create(util::Status* status);
+  static std::unique_ptr<Pci> Create(absl::Status* status);
 
   uint8_t ReadConfigUint8(int bus, int device, int function, int offset);
   uint8_t ReadConfigUint8(uint32_t config_address);
@@ -82,7 +83,7 @@ class Pci {
 
  private:
   Pci() = default;
-  util::Status Init();
+  absl::Status Init();
 };
 
 }  // namespace security::pawn

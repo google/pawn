@@ -16,6 +16,7 @@
 
 #include "pawn/chipset.h"
 
+#include "absl/status/status.h"
 #include "pawn/chipset_intel_6_series.h"
 #include "pawn/chipset_intel_7_series.h"
 #include "pawn/chipset_intel_8_series.h"
@@ -35,7 +36,7 @@ Chipset::~Chipset() = default;
 
 std::unique_ptr<Chipset> Chipset::Create(Pci* pci,
                                          Chipset::HardwareId* probed_id,
-                                         util::Status* status) {
+                                         absl::Status* status) {
   CHECK_NOTNULL(pci);
   CHECK_NOTNULL(status);
   const Chipset::HardwareId hw_id = {pci->ReadConfigUint16(pci::kVidRegister),
@@ -45,8 +46,8 @@ std::unique_ptr<Chipset> Chipset::Create(Pci* pci,
     *probed_id = hw_id;
   }
   if (hw_id.vendor != 0x8086 /* Intel */) {
-    *status = util::Status(util::error::UNIMPLEMENTED,
-                           "Only Intel chipsets are currently supported");
+    *status =
+        absl::UnimplementedError("Only Intel chipsets are currently supported");
     return nullptr;
   }
 
@@ -72,8 +73,8 @@ std::unique_ptr<Chipset> Chipset::Create(Pci* pci,
     return std::unique_ptr<Chipset>(new Intel9SeriesChipset(hw_id, pci));
   }
 
-  *status = util::Status(util::error::UNIMPLEMENTED,
-                         "Unsupported Intel chipset, check hardware id.");
+  *status =
+      absl::UnimplementedError("Unsupported Intel chipset, check hardware id.");
   return nullptr;
 }
 
@@ -81,12 +82,11 @@ const Chipset::HardwareId& Chipset::hardware_id() const {
   return hardware_id_;
 }
 
-util::Status Chipset::MapRootComplex(const Chipset::Rcba& rcba) {
+absl::Status Chipset::MapRootComplex(const Chipset::Rcba& rcba) {
   if (!rcba.enable) {
-    return util::Status(util::error::INVALID_ARGUMENT,
-                        "RCBA Enable (EN) must be set");
+    return absl::InvalidArgumentError("RCBA Enable (EN) must be set");
   }
-  util::Status status;
+  absl::Status status;
   // The size of the root complex is aligned on 4KiB. All Intel chipsets
   // released 2008 or later have 4 pages mapped.
   // See Chipset Configuration Registers (Memory Space), p. 275-276
@@ -99,7 +99,7 @@ void Chipset::UnMapRootComplex() {
   rcrb_mem_.reset(nullptr);
 }
 
-util::Status Chipset::ReadSpiWithHardwareSequencing(
+absl::Status Chipset::ReadSpiWithHardwareSequencing(
     int flash_address, int size, int block_size,
     std::function<bool(int flash_address, const char* data)> block_read,
     std::function<bool(int flash_address)> block_read_error,
@@ -121,18 +121,16 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
   CHECK_NOTNULL(block_read);
   if (block_size < 4 || block_size > 64 /* Chipset limit */) {
     // We do not support reading less than 32-bit here.
-    return util::Status(util::error::INVALID_ARGUMENT,
-                        "Block size must be a value between 4-64 (inclusive).");
+    return absl::InvalidArgumentError(
+        "Block size must be a value between 4-64 (inclusive).");
   }
   if (size % block_size != 0) {
-    return util::Status(util::error::INVALID_ARGUMENT,
-                        "Size must be divisible by block size");
+    return absl::InvalidArgumentError("Size must be divisible by block size");
   }
 
   auto hsfs = ReadHsfsRegister();
   if (hsfs.spi_cycle_in_progress) {
-    return util::Status(util::error::FAILED_PRECONDITION,
-                        "SPI flash cycle in progress");
+    return absl::UnavailableError("SPI flash cycle in progress");
   }
 
   std::vector<uint32_t> buf(block_size / 4, 0);
@@ -160,7 +158,7 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
     if (hsfs.flash_cycle_error && block_read_error) {
       // We may have tried to read a protected area.
       if (!block_read_error(cur_flash_address)) {
-        return util::OkStatus();
+        return absl::OkStatus();
       }
     }
 
@@ -171,13 +169,13 @@ util::Status Chipset::ReadSpiWithHardwareSequencing(
     }
     if (!block_read(cur_flash_address,
                     reinterpret_cast<const char*>(buf.data()))) {
-      return util::OkStatus();
+      return absl::OkStatus();
     }
   }
   if (block_read_done) {
     block_read_done();
   }
-  return util::OkStatus();
+  return absl::OkStatus();
 }
 
 Pci* Chipset::pci() {
