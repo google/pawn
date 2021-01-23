@@ -58,38 +58,37 @@ int PawnMain(int argc, char* argv[]) {
     absl::PrintF("%s %s, %s\n", kPawnName, kPawnDetailedVersion,
                  kPawnCopyright);
   }
-  absl::Status status;
 
   // We need to access the PCI configuration space, which requires to enable
   // ring-3 I/O privileges. This needs to be done as root.
   absl::PrintF("Acquiring I/O port read permissions, this may fail...\n");
-  auto pci = Pci::Create(&status);
-  QCHECK_OK(status);
+  auto pci = Pci::Create();
+  QCHECK_OK(pci.status());
 
   // Read chipset vendor and device ids as well as the hardware revision. Hint:
   // a vendor id of 0x8086 is "Intel".
   // TODO(cblichmann): Do what lspci does and lookup the vendor/device to
   //                   display the device name.
   absl::PrintF("Reading chipset LPC device identification: ");
+
   Chipset::HardwareId hw_id;
-  auto chipset = Chipset::Create(pci.get(), &hw_id, &status);
+  auto chipset = Chipset::Create(*pci, hw_id);
   // TODO(cblichmann): Deal with Intel's "Compatible Revision Ids". They're
   //                   essentially faking RIDs on boot.
   absl::PrintF("  VID: 0x%04X  DID: 0x%04X  RID: 0x%02X (%d)\n", hw_id.vendor,
                hw_id.device, hw_id.revision, hw_id.revision);
-  QCHECK_OK(status);
+  QCHECK_OK(chipset.status());
 
   // Map 16KiB of chipset configuration space at the physical address indicated
   // by the RCBA register into our process. This also requires elevated
   // privileges.
-  auto rcba = chipset->ReadRcbaRegister();
+  auto rcba = (*chipset)->ReadRcbaRegister();
   // Root Complex Register Block Chipset Register Space
   absl::PrintF(
       "Mapping 16KiB chipset configuration space at RCBA = 0x%8X, this may "
       "fail...\n",
       rcba.base_address);
-  status = chipset->MapRootComplex(rcba);
-  if (!status.ok()) {
+  if (auto status = (*chipset)->MapRootComplex(rcba); !status.ok()) {
     absl::PrintF(
         "Error: %s\n"
         "       Check if your kernel was compiled with IO_STRICT_DEVMEM=y.\n"
@@ -99,9 +98,9 @@ int PawnMain(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  auto gcs = chipset->ReadGcsRegister();
-  constexpr const char* kBootBiosStrapsDesc[] = {"LPC", "Reserved", "PCI",
-                                                 "SPI"};
+  auto gcs = (*chipset)->ReadGcsRegister();
+  constexpr absl::string_view kBootBiosStrapsDesc[] = {"LPC", "Reserved", "PCI",
+                                                       "SPI"};
   absl::PrintF("Boot BIOS Straps (BBS): %s\n",
                kBootBiosStrapsDesc[gcs.boot_bios_straps]);
   if (gcs.boot_bios_straps != Chipset::kBbsSpi) {
@@ -109,12 +108,12 @@ int PawnMain(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  auto bfpr = chipset->ReadBfprRegister();
+  auto bfpr = (*chipset)->ReadBfprRegister();
   absl::PrintF("PRB: 0x%08X  PRL: 0x%08X\n",
                bfpr.bios_flash_primary_region_base,
                bfpr.bios_flash_primary_region_limit);
 
-  auto frap = chipset->ReadFrapRegister();
+  auto frap = (*chipset)->ReadFrapRegister();
   absl::PrintF("FRAP: 0x%08X\n", *reinterpret_cast<uint32_t*>(&frap));
 
   enum { kNumFlashRegions = 5 };
@@ -124,18 +123,18 @@ int PawnMain(int argc, char* argv[]) {
   } regions[kNumFlashRegions];
   for (int i = 0; i < ABSL_ARRAYSIZE(regions); ++i) {
     auto& region = regions[i];
-    region = {chipset->ReadFregNRegister(i), chipset->ReadPrNRegister(i)};
+    region = {(*chipset)->ReadFregNRegister(i), (*chipset)->ReadPrNRegister(i)};
     absl::PrintF("FREG%d  Base: 0x%08X  Limit: 0x%08X\n", i,
                  region.freg.region_base, region.freg.region_limit);
   }
 
   absl::PrintF("BIOS protection mechanisms:\n");
-  auto hsfs = chipset->ReadHsfsRegister();
+  auto hsfs = (*chipset)->ReadHsfsRegister();
 
   absl::PrintF("  HSFS Flash Configuration Lock-Down (FLOCKDN): %d\n",
                hsfs.flash_configuration_lockdown);
   absl::PrintF("  BIOS Control Register (BIOS_CNTL):\n");
-  auto bios_cntl = chipset->ReadBiosCntlRegister();
+  auto bios_cntl = (*chipset)->ReadBiosCntlRegister();
   absl::PrintF("    SMM BIOS Write Protect Disable (SMM_BWP):   %d\n",
                bios_cntl.smm_bios_write_protect_disable);
   absl::PrintF("    BIOS Lock Enable (BLE):                     %d\n",
@@ -160,16 +159,20 @@ int PawnMain(int argc, char* argv[]) {
   absl::PrintF("Flash Descriptor Valid (FDV): %d\n",
                hsfs.flash_descriptor_valid);
   if (!hsfs.flash_descriptor_valid) {
-    absl::PrintF("Warning: System not in descriptor mode!\n");
+    absl::PrintF("Error: System not in descriptor mode!\n");
     return EXIT_FAILURE;
   }
 
-  auto* dump = fopen(dump_filename, "wb");
+  std::unique_ptr<FILE, void (*)(FILE*)> dump(fopen(dump_filename, "wb"),
+                                              [](FILE* f) {
+                                                if (f) {
+                                                  fclose(f);
+                                                }
+                                              });
   if (dump == nullptr) {
     absl::PrintF("Error: Could not open output file for writing.\n");
-    return 1;
+    return EXIT_FAILURE;
   }
-  std::shared_ptr<FILE> dump_closer(dump, [](FILE* dump) { fclose(dump); });
 
   enum {
     kBlockSize = 64,
@@ -178,13 +181,13 @@ int PawnMain(int argc, char* argv[]) {
   absl::PrintF("Reading SPI flash");
   fflush(STDIN_FILENO);
 
-  auto ssfs = chipset->ReadSsfsRegister();
+  auto ssfs = (*chipset)->ReadSsfsRegister();
   if (ssfs.spi_cycle_in_progress) {
-    absl::PrintF("SPI flash cycle in progress");
+    absl::PrintF("Error: SPI flash cycle in progress\n");
     return EXIT_FAILURE;
   }
 
-  QCHECK_OK(chipset->ReadSpiWithHardwareSequencing(
+  QCHECK_OK((*chipset)->ReadSpiWithHardwareSequencing(
       0 /* Start address */, kMaxFlash, kBlockSize,
       [&dump](int64_t fla, const char* data) -> bool {
         if (fla / kBlockSize % 256 == 0) {
@@ -192,7 +195,7 @@ int PawnMain(int argc, char* argv[]) {
           fflush(STDIN_FILENO);
         }
         if (fwrite(static_cast<const void*>(data), 1 /* Size */, kBlockSize,
-                   dump) != kBlockSize) {
+                   dump.get()) != kBlockSize) {
           LOG(FATAL) << "Could not write " << kBlockSize << " bytes.";
         }
         return true;

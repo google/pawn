@@ -40,6 +40,7 @@
 #include <memory>
 
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 
 namespace security::pawn {
 
@@ -191,14 +192,14 @@ class Chipset {
   Chipset(const Chipset&) = delete;
   Chipset& operator=(const Chipset&) = delete;
 
-  virtual ~Chipset();
+  virtual ~Chipset() = default;
 
   // Creates a new Chipset instance by probing the PCI bus and setting the
   // appropriate register and base offsets if the chipset is supported.
   // Otherwise, status is set accordingly. If probed_id is non-nullptr, it is
   // filled with the PCI hardware id of the chipset's LPC device.
-  static std::unique_ptr<Chipset> Create(Pci* pci, HardwareId* probed_id,
-                                         absl::Status* status);
+  static absl::StatusOr<std::unique_ptr<Chipset>> Create(Pci& pci,
+                                                         HardwareId& probed_id);
 
   const HardwareId& hardware_id() const;
 
@@ -246,10 +247,13 @@ class Chipset {
   PhysicalMemory* rcrb_mem();
 
  protected:
-  // Make constructor available to deriving classes.
-  Chipset(const HardwareId& probed_id, Pci* pci);
+  struct Tag {};  // Constructor tag
 
-  Pci* pci();
+  // Make constructor available to deriving classes.
+  Chipset(const HardwareId& probed_id, Pci& pci)
+      : hardware_id_(probed_id), pci_(&pci) {}
+
+  Pci& pci() { return *pci_; }
 
   // Returns this chipset's SPIBAR value, usually 0x3800.
   virtual uint16_t SpiBar(int offset) const = 0;

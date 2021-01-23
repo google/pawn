@@ -20,10 +20,6 @@
 
 namespace security::pawn {
 
-Intel8SeriesChipset::Intel8SeriesChipset(const Chipset::HardwareId& probed_id,
-                                         Pci* pci)
-    : Intel7SeriesChipset(probed_id, pci) {}
-
 Chipset::Gcs Intel8SeriesChipset::ReadGcsRegister() {
   auto gcs = rcrb_mem()->ReadUint32(kGcsRegister);
   constexpr Chipset::BootBiosStraps kBootBiosStraps[] = {
@@ -34,7 +30,7 @@ Chipset::Gcs Intel8SeriesChipset::ReadGcsRegister() {
   return {
       // Integrated on-processor chipsets only use 1-bit for BBS.
       IsIntegratedIo()
-          ? kIntegratedIoBootBiosStrap[bits::Value<10, 10>(
+          ? kIntegratedIoBootBiosStrap[bits::Value<10>(
                 gcs)] /* See Mobile p. 351 */
           : kBootBiosStraps[bits::Value<11, 10>(gcs)] /* See p. 358 */,
       bits::Test<0>(gcs),  // BILD

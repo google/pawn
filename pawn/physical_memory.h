@@ -19,6 +19,7 @@
 #include <memory>
 
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 
 namespace security::pawn {
 
@@ -30,9 +31,8 @@ class PhysicalMemory {
 
   ~PhysicalMemory();
 
-  static std::unique_ptr<PhysicalMemory> Create(uintptr_t physical_offset,
-                                                size_t length,
-                                                absl::Status* status);
+  static absl::StatusOr<std::unique_ptr<PhysicalMemory>> Create(
+      uintptr_t physical_offset, size_t length);
 
   // Provides raw access to physical memory. See note below.
   void* GetAt(int offset);

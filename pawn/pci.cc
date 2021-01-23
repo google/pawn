@@ -17,21 +17,28 @@
 #include <cstdint>
 
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "pawn/pci.h"
 
 namespace security::pawn {
 
+Pci::Pci(Pci&& other) {
+  *this = std::move(other);
+}
+
+Pci& Pci::operator=(Pci&& other) {
+  iopl_done_ = other.iopl_done_;
+  other.iopl_done_ = false;
+  return *this;
+}
+
 Pci::~Pci() {
-  iopl(0 /* Reset to ring 0 access. */);  // Ignore error.
+  if (iopl_done_) {
+    iopl(0 /* Reset to ring 0 access. */);  // Ignore error.
+  }
 }
 
-std::unique_ptr<Pci> Pci::Create(absl::Status* status) {
-  std::unique_ptr<Pci> pci(new Pci());
-  *status = pci->Init();
-  return status->ok() ? std::move(pci) : nullptr;
-}
-
-absl::Status Pci::Init() {
+absl::StatusOr<Pci> Pci::Create() {
   // Note: This will not work on Windows, since there is no official API that
   //       allows to do this. A small kernel driver is needed there.
   if (iopl(3 /* Request ring 3 access to all I/O ports. */) !=
@@ -40,13 +47,16 @@ absl::Status Pci::Init() {
         "Failed to acquire I/O privileges. Make sure this "
         "process runs as root and/or has CAP_SYS_RAWIO.");
   }
-  return absl::OkStatus();
+
+  Pci pci;
+  pci.iopl_done_ = true;
+  return pci;
 }
 
 enum {
   // I/O ports used for accessing the PCI configuration space.
   kConfigAddress = 0xCF8,
-  kConfigData = 0xCFC
+  kConfigData = 0xCFC,
 };
 
 #define DEFINE_READCONFIGUINT(read_config, int_type, in_call)                  \

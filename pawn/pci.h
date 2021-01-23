@@ -22,16 +22,16 @@
 #include <cstdint>
 #include <memory>
 
-#include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "pawn/bits.h"
 
 namespace security::pawn {
 namespace pci {
 
 constexpr uint32_t MakeConfigAddress(int bus, int device, int function,
-                                   int offset) {
+                                     int offset) {
   // See PCI Local Bus Specification 3.0, Volume 1, Page 50:
-  return bits::Set<31, 31>(1) |        // Bit 31: Config Transaction Enable
+  return bits::Set<31>(1) |            // Bit 31: Config Transaction Enable
          bits::Set<23, 16>(bus) |      // Bits 23-16: Bus Number
          bits::Set<15, 11>(device) |   // Bits 15-11: Device Number
          bits::Set<10, 8>(function) |  // Bits 10-8: Function Number
@@ -41,25 +41,23 @@ constexpr uint32_t MakeConfigAddress(int bus, int device, int function,
          bits::Set<7, 0>(offset);
 }
 
-enum {
-  // The following registers should always be available at B0:D31:F0 and are
-  // part of the (standardized) PCI header.
+// The following registers should always be available at B0:D31:F0 and are
+// part of the (standardized) PCI header.
 
-  // Vendor Identification Register (16-bit)
-  kVidRegister = MakeConfigAddress(0x00, 31, 0, 0x00),
+// Vendor Identification Register (16-bit)
+constexpr uint32_t kVidRegister = MakeConfigAddress(0x00, 31, 0, 0x00);
 
-  // Device Identification Register (16-bit)
-  kDidRegister = MakeConfigAddress(0x00, 31, 0, 0x02),
+// Device Identification Register (16-bit)
+constexpr uint32_t kDidRegister = MakeConfigAddress(0x00, 31, 0, 0x02);
 
-  // Device Identification Register (8-bit)
-  kRidRegister = MakeConfigAddress(0x00, 31, 0, 0x08),
+// Device Identification Register (8-bit)
+constexpr uint32_t kRidRegister = MakeConfigAddress(0x00, 31, 0, 0x08);
 
-  // Note: These are all taken from the Intel X79 Express Chipset Datasheet
-  //       (November 2011).
+// Note: These are all taken from the Intel X79 Express Chipset Datasheet
+//       (November 2011).
 
-  // BIOS Decode Enable Register (Page 358, 16-bit)
-  kBiosDecEn1Register = MakeConfigAddress(0x00, 31, 0, 0xD8),
-};
+// BIOS Decode Enable Register (Page 358, 16-bit)
+constexpr uint32_t kBiosDecEn1Register = MakeConfigAddress(0x00, 31, 0, 0xD8);
 
 }  // namespace pci
 
@@ -69,9 +67,12 @@ class Pci {
   Pci(const Pci&) = delete;
   Pci& operator=(const Pci&) = delete;
 
+  Pci(Pci&& other);
+  Pci& operator=(Pci&& other);
+
   ~Pci();
 
-  static std::unique_ptr<Pci> Create(absl::Status* status);
+  static absl::StatusOr<Pci> Create();
 
   uint8_t ReadConfigUint8(int bus, int device, int function, int offset);
   uint8_t ReadConfigUint8(uint32_t config_address);
@@ -82,7 +83,8 @@ class Pci {
 
  private:
   Pci() = default;
-  absl::Status Init();
+
+  bool iopl_done_ = false;
 };
 
 }  // namespace security::pawn

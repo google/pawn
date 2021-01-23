@@ -48,11 +48,11 @@ class Intel9SeriesChipset : public Intel8SeriesChipset {
             id.device == 0x8CC4 /* Z97 */ || id.device == 0x8CC6 /* H97 */);
   }
 
+  Intel9SeriesChipset(Chipset::Tag tag, const Chipset::HardwareId& probed_id,
+                      Pci& pci)
+      : Intel8SeriesChipset(tag, probed_id, pci) {}
+
  protected:
-  friend class Chipset;
-
-  Intel9SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
-
   virtual bool IsIntegratedIo() {
     // Call the static constexpr version, hence the identical code compared to
     // Intel8SeriesChipset.

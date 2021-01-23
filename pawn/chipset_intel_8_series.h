@@ -51,13 +51,13 @@ class Intel8SeriesChipset : public Intel7SeriesChipset {
             id.device == 0x8C5C /* H81 */);
   }
 
+  Intel8SeriesChipset(Chipset::Tag tag, const Chipset::HardwareId& probed_id,
+                      Pci& pci)
+      : Intel7SeriesChipset(tag, probed_id, pci) {}
+
   Chipset::Gcs ReadGcsRegister() override;
 
  protected:
-  friend class Chipset;
-
-  Intel8SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
-
   virtual bool IsIntegratedIo() { return IsIntegratedIo(hardware_id().device); }
 };
 

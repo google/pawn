@@ -50,6 +50,7 @@ add_library(pawn::pci ALIAS pawn_pci)
 target_link_libraries(pawn_pci PRIVATE
   pawn_base
   absl::status
+  absl::statusor
   pawn::bits
 )
 
@@ -58,23 +59,20 @@ add_library(pawn_chipsets STATIC
   chipset.h
   chipset_intel_6_series.cc
   chipset_intel_6_series.h
-  chipset_intel_7_series.cc
   chipset_intel_7_series.h
   chipset_intel_8_series.cc
   chipset_intel_8_series.h
-  chipset_intel_9_series.cc
   chipset_intel_9_series.h
-  chipset_intel_ich10.cc
-  chipset_intel_ich10.h
   chipset_intel_ich8.cc
   chipset_intel_ich8.h
-  chipset_intel_ich9.cc
   chipset_intel_ich9.h
+  chipset_intel_ich10.h
 )
 add_library(pawn::chipsets ALIAS pawn_chipsets)
 target_link_libraries(pawn_chipsets PRIVATE
   pawn_base
   absl::status
+  absl::statusor
   pawn::bits
   pawn::memory
   pawn::pci

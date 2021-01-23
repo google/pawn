@@ -21,22 +21,28 @@
 
 #include <cerrno>
 #include <cstring>
+#include <memory>
 
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "absl/strings/str_cat.h"
 
 namespace security::pawn {
 
 PhysicalMemory::~PhysicalMemory() {
-  munmap(mem_, length_);
-  close(mem_fd_);
+  if (mem_) {
+    munmap(mem_, length_);
+    close(mem_fd_);
+  }
 }
 
-std::unique_ptr<PhysicalMemory> PhysicalMemory::Create(
-    uintptr_t physical_offset, size_t length, absl::Status* status) {
+absl::StatusOr<std::unique_ptr<PhysicalMemory>> PhysicalMemory::Create(
+    uintptr_t physical_offset, size_t length) {
   std::unique_ptr<PhysicalMemory> mem(new PhysicalMemory());
-  *status = mem->Init(physical_offset, length);
-  return status->ok() ? std::move(mem) : nullptr;
+  if (auto status = mem->Init(physical_offset, length); !status.ok()) {
+    return status;
+  }
+  return mem;
 }
 
 absl::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
