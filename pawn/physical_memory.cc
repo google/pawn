@@ -34,7 +34,6 @@ PhysicalMemory::~PhysicalMemory() {
 
 std::unique_ptr<PhysicalMemory> PhysicalMemory::Create(
     uintptr_t physical_offset, size_t length, absl::Status* status) {
-  CHECK_NOTNULL(status);
   std::unique_ptr<PhysicalMemory> mem(new PhysicalMemory());
   *status = mem->Init(physical_offset, length);
   return status->ok() ? std::move(mem) : nullptr;

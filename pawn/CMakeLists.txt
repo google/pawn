@@ -14,9 +14,46 @@
 
 configure_file(version.h.in version.h ESCAPE_QUOTES @ONLY)
 
-add_executable(pawn
-  ${CMAKE_CURRENT_BINARY_DIR}/version.h
+add_library(pawn_bits STATIC
   bits.h
+)
+add_library(pawn::bits ALIAS pawn_bits)
+set_target_properties(pawn_bits PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(pawn_bits PRIVATE
+  pawn_base
+)
+
+add_library(pawn_util STATIC
+  mini_google.h
+)
+add_library(pawn::util ALIAS pawn_util)
+set_target_properties(pawn_util PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(pawn_util PRIVATE
+  pawn_base
+)
+
+add_library(pawn_memory STATIC
+  physical_memory.cc
+  physical_memory.h
+)
+add_library(pawn::memory ALIAS pawn_memory)
+target_link_libraries(pawn_memory PRIVATE
+  pawn_base
+  absl::status
+)
+
+add_library(pawn_pci STATIC
+  pci.cc
+  pci.h
+)
+add_library(pawn::pci ALIAS pawn_pci)
+target_link_libraries(pawn_pci PRIVATE
+  pawn_base
+  absl::status
+  pawn::bits
+)
+
+add_library(pawn_chipsets STATIC
   chipset.cc
   chipset.h
   chipset_intel_6_series.cc
@@ -33,20 +70,33 @@ add_executable(pawn
   chipset_intel_ich8.h
   chipset_intel_ich9.cc
   chipset_intel_ich9.h
+)
+add_library(pawn::chipsets ALIAS pawn_chipsets)
+target_link_libraries(pawn_chipsets PRIVATE
+  pawn_base
+  absl::status
+  pawn::bits
+  pawn::memory
+  pawn::pci
+  pawn::util
+)
+
+add_executable(pawn
+  ${CMAKE_CURRENT_BINARY_DIR}/version.h
   pawn.cc
-  pci.cc
-  pci.h
-  physical_memory.cc
-  physical_memory.h
 )
 target_link_libraries(pawn
   pawn_base
   absl::flags
   absl::flags_parse
   absl::flags_usage
-  absl::str_format
   absl::status
+  absl::str_format
   absl::strings
+  pawn::chipsets
+  pawn::memory
+  pawn::pci
+  pawn::util
 )
 
 install(TARGETS pawn DESTINATION ${CMAKE_INSTALL_SBINDIR})

@@ -19,8 +19,6 @@
 #include "absl/status/status.h"
 #include "pawn/pci.h"
 
-#include "pawn/mini_google.h"
-
 namespace security::pawn {
 
 Pci::~Pci() {
@@ -29,7 +27,7 @@ Pci::~Pci() {
 
 std::unique_ptr<Pci> Pci::Create(absl::Status* status) {
   std::unique_ptr<Pci> pci(new Pci());
-  *CHECK_NOTNULL(status) = pci->Init();
+  *status = pci->Init();
   return status->ok() ? std::move(pci) : nullptr;
 }
 
