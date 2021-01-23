@@ -34,7 +34,7 @@ enum LogSeverity {
 
 struct LogMessage {
   LogMessage(LogSeverity sev, const char* file, int line) {
-    static constexpr char kSeverityLetter[] = "IWEF";
+    constexpr char kSeverityLetter[] = "IWEF";
     get() << kSeverityLetter[sev] << " " << file << ":" << line << "] ";
   }
 
@@ -50,23 +50,25 @@ struct LogFatal : public LogMessage {
   ~LogFatal() { abort(); }
 };
 
-#define LOG(severity) ZYNAMICS_LOG_##severity
-#define ZYNAMICS_LOG_INFO                                                    \
+#define LOG(severity) PAWN_LOG_##severity
+#define PAWN_LOG_INFO                                                        \
   ::security::pawn::LogMessage(::security::pawn::kLogSeverityInfo, __FILE__, \
                                __LINE__)                                     \
       .get()
-#define ZYNAMICS_LOG_WARNING                                          \
+#define PAWN_LOG_WARNING                                              \
   ::security::pawn::LogMessage(::security::pawn::kLogSeverityWarning, \
                                __FILE__, __LINE__)                    \
       .get()
-#define ZYNAMICS_LOG_ERROR                                                    \
+#define PAWN_LOG_ERROR                                                        \
   ::security::pawn::LogMessage(::security::pawn::kLogSeverityError, __FILE__, \
                                __LINE__)                                      \
       .get()
-#define ZYNAMICS_LOG_FATAL ::security::pawn::LogFatal(__FILE__, __LINE__).get()
+#define PAWN_LOG_FATAL ::security::pawn::LogFatal(__FILE__, __LINE__).get()
 
-#define CHECK(cond) \
-  if (!(cond)) { LOG(FATAL) << "Check failed: " #cond ""; }
+#define CHECK(cond)                          \
+  if (!(cond)) {                             \
+    LOG(FATAL) << "Check failed: " #cond ""; \
+  }
 #define QCHECK(cond) CHECK(cond)
 
 template <typename T>
@@ -83,62 +85,11 @@ T&& CheckNotNull(const char* file, int line, const char* message, T&& t) {
 
 }  // namespace security::pawn
 
-template <typename T, size_t N>
-char (&ArraySizeHelper(T (&array)[N]))[N];
-
-#define arraysize(array) (sizeof(ArraySizeHelper(array)))
-
-namespace util {
-
-class Status {
- public:
-  Status() = default;
-  Status(int /* code */, const char* message) : message_(message) {}
-  Status(int /* code */, const std::string& message) : message_(message) {}
-
-  bool ok() { return message_.empty(); }
-
-  const std::string& error_message() { return message_; }
-
- private:
-  std::string message_;
-};
-
-inline Status OkStatus() {
-  return Status();
-}
-
-namespace error {
-
-enum {
-  OK = 0,
-  CANCELLED = 1,
-  UNKNOWN = 2,
-  INVALID_ARGUMENT = 3,
-  DEADLINE_EXCEEDED = 4,
-  NOT_FOUND = 5,
-  ALREADY_EXISTS = 6,
-  PERMISSION_DENIED = 7,
-  UNAUTHENTICATED = 16,
-  RESOURCE_EXHAUSTED = 8,
-  FAILED_PRECONDITION = 9,
-  ABORTED = 10,
-  OUT_OF_RANGE = 11,
-  UNIMPLEMENTED = 12,
-  INTERNAL = 13,
-  UNAVAILABLE = 14,
-  DATA_LOSS = 15
-};
-
-}  // namespace error
-}  // namespace util
-
-#define CHECK_OK(status)                              \
-  {                                                   \
-    auto zynamics_mg_527c = (status);                 \
-    if (!zynamics_mg_527c.ok()) {                     \
-      LOG(FATAL) << zynamics_mg_527c.error_message(); \
-    }                                                 \
+#define CHECK_OK(status)                                          \
+  {                                                               \
+    if (const auto _pawn_status = (status); !_pawn_status.ok()) { \
+      LOG(FATAL) << _pawn_status.message();                       \
+    }                                                             \
   }
 #define QCHECK_OK(status) CHECK_OK(status)
 

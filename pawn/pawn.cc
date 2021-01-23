@@ -24,9 +24,11 @@
 #include <memory>
 #include <vector>
 
+#include "absl/base/macros.h"
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/flags/usage.h"
+#include "absl/status/status.h"
 #include "absl/strings/str_format.h"
 #include "pawn/bits.h"
 #include "pawn/chipset.h"
@@ -56,7 +58,7 @@ int PawnMain(int argc, char* argv[]) {
     absl::PrintF("%s %s, %s\n", kPawnName, kPawnDetailedVersion,
                  kPawnCopyright);
   }
-  util::Status status;
+  absl::Status status;
 
   // We need to access the PCI configuration space, which requires to enable
   // ring-3 I/O privileges. This needs to be done as root.
@@ -93,7 +95,7 @@ int PawnMain(int argc, char* argv[]) {
         "       Check if your kernel was compiled with IO_STRICT_DEVMEM=y.\n"
         "       On Debian kernels > 4.8.4, boot with iomem=relaxed to\n"
         "       temporarily disable /dev/mem IO protection.\n",
-        status.error_message().c_str());
+        status.message());
     return EXIT_FAILURE;
   }
 
@@ -120,7 +122,7 @@ int PawnMain(int argc, char* argv[]) {
     Chipset::FregN freg;
     Chipset::PrN pr;
   } regions[kNumFlashRegions];
-  for (int i = 0; i < arraysize(regions); ++i) {
+  for (int i = 0; i < ABSL_ARRAYSIZE(regions); ++i) {
     auto& region = regions[i];
     region = {chipset->ReadFregNRegister(i), chipset->ReadPrNRegister(i)};
     absl::PrintF("FREG%d  Base: 0x%08X  Limit: 0x%08X\n", i,
@@ -142,7 +144,7 @@ int PawnMain(int argc, char* argv[]) {
                bios_cntl.bios_write_enable);
 
   absl::PrintF("  Protected Range Registers:\n");
-  for (int i = 0; i < arraysize(regions); ++i) {
+  for (int i = 0; i < ABSL_ARRAYSIZE(regions); ++i) {
     const auto& region = regions[i];
     absl::PrintF("    PR%d Write Protection Enable: %d\n", i,
                  region.pr.write_protection_enable);

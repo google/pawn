@@ -45,6 +45,7 @@ target_link_libraries(pawn
   absl::flags_parse
   absl::flags_usage
   absl::str_format
+  absl::status
   absl::strings
 )
 

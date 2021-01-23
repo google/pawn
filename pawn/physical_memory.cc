@@ -22,6 +22,7 @@
 #include <cerrno>
 #include <cstring>
 
+#include "absl/status/status.h"
 #include "absl/strings/str_cat.h"
 
 namespace security::pawn {
@@ -32,32 +33,31 @@ PhysicalMemory::~PhysicalMemory() {
 }
 
 std::unique_ptr<PhysicalMemory> PhysicalMemory::Create(
-    uintptr_t physical_offset, size_t length, util::Status* status) {
+    uintptr_t physical_offset, size_t length, absl::Status* status) {
   CHECK_NOTNULL(status);
   std::unique_ptr<PhysicalMemory> mem(new PhysicalMemory());
   *status = mem->Init(physical_offset, length);
   return status->ok() ? std::move(mem) : nullptr;
 }
 
-util::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
+absl::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
   length_ = length;
 
   mem_fd_ = open("/dev/mem", O_RDWR);
   if (mem_fd_ == -1 /* Error */) {
-    return util::Status(util::error::FAILED_PRECONDITION,
-                        "Could not open physical memory file. Make sure this "
-                        "process runs as root.");
+    return absl::FailedPreconditionError(
+        "Could not open physical memory file. Make sure this process runs as "
+        "root.");
   }
 
   mem_ = mmap(nullptr /* Address hint */, length_, PROT_READ | PROT_WRITE,
               MAP_SHARED, mem_fd_, physical_offset);
   if (mem_ == MAP_FAILED) {
     mem_ = nullptr;
-    return util::Status(
-        util::error::FAILED_PRECONDITION,
+    return absl::FailedPreconditionError(
         absl::StrCat("Could not map physical memory: ", std::strerror(errno)));
   }
-  return util::OkStatus();
+  return absl::OkStatus();
 }
 
 void* PhysicalMemory::GetAt(int offset) {
