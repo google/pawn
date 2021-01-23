@@ -22,6 +22,8 @@
 #include <cerrno>
 #include <cstring>
 
+#include "absl/strings/str_cat.h"
+
 namespace security::pawn {
 
 PhysicalMemory::~PhysicalMemory() {
@@ -51,9 +53,9 @@ util::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
               MAP_SHARED, mem_fd_, physical_offset);
   if (mem_ == MAP_FAILED) {
     mem_ = nullptr;
-    string error(std::strerror(errno));
-    return util::Status(util::error::FAILED_PRECONDITION,
-                        string("Could not map physical memory: ") + error);
+    return util::Status(
+        util::error::FAILED_PRECONDITION,
+        absl::StrCat("Could not map physical memory: ", std::strerror(errno)));
   }
   return util::OkStatus();
 }
@@ -62,38 +64,43 @@ void* PhysicalMemory::GetAt(int offset) {
   return reinterpret_cast<void*>(reinterpret_cast<uintptr_t>(mem_) + offset);
 }
 
-uint8 PhysicalMemory::ReadUint8(int offset) const {
-  return *reinterpret_cast<uint8*>(reinterpret_cast<uintptr_t>(mem_) + offset);
+uint8_t PhysicalMemory::ReadUint8(int offset) const {
+  return *reinterpret_cast<uint8_t*>(reinterpret_cast<uintptr_t>(mem_) +
+                                     offset);
 }
 
-uint16 PhysicalMemory::ReadUint16(int offset) const {
-  return *reinterpret_cast<uint16*>(reinterpret_cast<uintptr_t>(mem_) + offset);
+uint16_t PhysicalMemory::ReadUint16(int offset) const {
+  return *reinterpret_cast<uint16_t*>(reinterpret_cast<uintptr_t>(mem_) +
+                                      offset);
 }
 
-uint32 PhysicalMemory::ReadUint32(int offset) const {
-  return *reinterpret_cast<uint32*>(reinterpret_cast<uintptr_t>(mem_) + offset);
+uint32_t PhysicalMemory::ReadUint32(int offset) const {
+  return *reinterpret_cast<uint32_t*>(reinterpret_cast<uintptr_t>(mem_) +
+                                      offset);
 }
 
-uint64 PhysicalMemory::ReadUint64(int offset) const {
-  return *reinterpret_cast<uint64*>(reinterpret_cast<uintptr_t>(mem_) + offset);
+uint64_t PhysicalMemory::ReadUint64(int offset) const {
+  return *reinterpret_cast<uint64_t*>(reinterpret_cast<uintptr_t>(mem_) +
+                                      offset);
 }
 
-void PhysicalMemory::WriteUint8(int offset, uint8 value) {
-  *reinterpret_cast<uint8*>(reinterpret_cast<uintptr_t>(mem_) + offset) = value;
-}
-
-void PhysicalMemory::WriteUint16(int offset, uint16 value) {
-  *reinterpret_cast<uint16*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
+void PhysicalMemory::WriteUint8(int offset, uint8_t value) {
+  *reinterpret_cast<uint8_t*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
       value;
 }
 
-void PhysicalMemory::WriteUint32(int offset, uint32 value) {
-  *reinterpret_cast<uint32*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
+void PhysicalMemory::WriteUint16(int offset, uint16_t value) {
+  *reinterpret_cast<uint16_t*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
       value;
 }
 
-void PhysicalMemory::WriteUint64(int offset, uint64 value) {
-  *reinterpret_cast<uint64*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
+void PhysicalMemory::WriteUint32(int offset, uint32_t value) {
+  *reinterpret_cast<uint32_t*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
+      value;
+}
+
+void PhysicalMemory::WriteUint64(int offset, uint64_t value) {
+  *reinterpret_cast<uint64_t*>(reinterpret_cast<uintptr_t>(mem_) + offset) =
       value;
 }
 

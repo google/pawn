@@ -19,6 +19,7 @@
 #error "Unsupported operating system."
 #endif
 
+#include <cstdint>
 #include <memory>
 
 #include "pawn/bits.h"
@@ -27,7 +28,7 @@
 namespace security::pawn {
 namespace pci {
 
-constexpr uint32 MakeConfigAddress(int bus, int device, int function,
+constexpr uint32_t MakeConfigAddress(int bus, int device, int function,
                                    int offset) {
   // See PCI Local Bus Specification 3.0, Volume 1, Page 50:
   return bits::Set<31, 31>(1) |        // Bit 31: Config Transaction Enable
@@ -72,12 +73,12 @@ class Pci {
 
   static std::unique_ptr<Pci> Create(util::Status* status);
 
-  uint8 ReadConfigUint8(int bus, int device, int function, int offset);
-  uint8 ReadConfigUint8(uint32 config_address);
-  uint16 ReadConfigUint16(int bus, int device, int function, int offset);
-  uint16 ReadConfigUint16(uint32 config_address);
-  uint32 ReadConfigUint32(int bus, int device, int function, int offset);
-  uint32 ReadConfigUint32(uint32 config_address);
+  uint8_t ReadConfigUint8(int bus, int device, int function, int offset);
+  uint8_t ReadConfigUint8(uint32_t config_address);
+  uint16_t ReadConfigUint16(int bus, int device, int function, int offset);
+  uint16_t ReadConfigUint16(uint32_t config_address);
+  uint32_t ReadConfigUint32(int bus, int device, int function, int offset);
+  uint32_t ReadConfigUint32(uint32_t config_address);
 
  private:
   Pci() = default;
