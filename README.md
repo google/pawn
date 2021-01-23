@@ -2,6 +2,8 @@
 
 Copyright 2014-2021 Google LLC.
 
+[![Linux Build Status](https://github.com/google/pawn/workflows/linux-build/badge.svg)](https://github.com/google/pawn/actions?query=workflow%3Alinux-build)
+
 Disclaimer: This is not an official Google product (experimental or otherwise),
 it is just code that happens to be owned by Google.
 
