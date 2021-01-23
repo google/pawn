@@ -19,7 +19,6 @@
 #include <memory>
 
 #include "absl/status/status.h"
-#include "pawn/mini_google.h"
 
 namespace security::pawn {
 

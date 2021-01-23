@@ -24,7 +24,6 @@
 
 #include "absl/status/status.h"
 #include "pawn/bits.h"
-#include "pawn/mini_google.h"
 
 namespace security::pawn {
 namespace pci {

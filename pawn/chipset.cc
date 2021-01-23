@@ -24,6 +24,7 @@
 #include "pawn/chipset_intel_ich10.h"
 #include "pawn/chipset_intel_ich8.h"
 #include "pawn/chipset_intel_ich9.h"
+#include "pawn/mini_google.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
