@@ -20,8 +20,7 @@
 
 #include "pawn/mini_google.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 // Provides access to physical memory.
 class PhysicalMemory {
@@ -61,7 +60,6 @@ class PhysicalMemory {
   size_t length_ = 0;
 };
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 #endif  // PAWN_PHYSICAL_MEMORY_H_

@@ -17,7 +17,7 @@
 
 #include "absl/strings/string_view.h"
 
-namespace security::zynamics {
+namespace security::pawn {
 
 // The product name, "pawn"
 inline constexpr absl::string_view kPawnName = "pawn";
@@ -39,6 +39,6 @@ inline constexpr absl::string_view kPawnDetailedVersion =
 // Full copyright string with current year
 inline constexpr absl::string_view kPawnCopyright = "(c)2014-2021 Google LLC.";
 
-}  // namespace security::zynamics
+}  // namespace security::pawn
 
 #endif  // PAWN_VERSION_H_

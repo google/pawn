@@ -33,7 +33,7 @@ typedef std::uint64_t uint64;
 
 using std::string;
 
-namespace zynamics {
+namespace security::pawn {
 
 enum LogSeverity {
   // Similar to //base/logging.h.
@@ -62,13 +62,19 @@ struct LogFatal : public LogMessage {
 };
 
 #define LOG(severity) ZYNAMICS_LOG_##severity
-#define ZYNAMICS_LOG_INFO ::zynamics::LogMessage( \
-    ::zynamics::kLogSeverityInfo, __FILE__, __LINE__).get()
-#define ZYNAMICS_LOG_WARNING ::zynamics::LogMessage( \
-    ::zynamics::kLogSeverityWarning, __FILE__, __LINE__).get()
-#define ZYNAMICS_LOG_ERROR ::zynamics::LogMessage( \
-    ::zynamics::kLogSeverityError, __FILE__, __LINE__).get()
-#define ZYNAMICS_LOG_FATAL ::zynamics::LogFatal(__FILE__, __LINE__).get()
+#define ZYNAMICS_LOG_INFO                                                    \
+  ::security::pawn::LogMessage(::security::pawn::kLogSeverityInfo, __FILE__, \
+                               __LINE__)                                     \
+      .get()
+#define ZYNAMICS_LOG_WARNING                                          \
+  ::security::pawn::LogMessage(::security::pawn::kLogSeverityWarning, \
+                               __FILE__, __LINE__)                    \
+      .get()
+#define ZYNAMICS_LOG_ERROR                                                    \
+  ::security::pawn::LogMessage(::security::pawn::kLogSeverityError, __FILE__, \
+                               __LINE__)                                      \
+      .get()
+#define ZYNAMICS_LOG_FATAL ::security::pawn::LogFatal(__FILE__, __LINE__).get()
 
 #define CHECK(cond) \
   if (!(cond)) { LOG(FATAL) << "Check failed: " #cond ""; }
@@ -77,15 +83,16 @@ struct LogFatal : public LogMessage {
 template <typename T>
 T&& CheckNotNull(const char* file, int line, const char* message, T&& t) {
   if (t == nullptr) {
-    zynamics::LogFatal(file, line).get() << message;
+    ::security::pawn::LogFatal(file, line).get() << message;
   }
   return std::forward<T>(t);
 }
 
-#define CHECK_NOTNULL(val) ::zynamics::CheckNotNull(__FILE__, __LINE__, \
-    "'" #val "' Must be non NULL", (val))
+#define CHECK_NOTNULL(val)                           \
+  ::security::pawn::CheckNotNull(__FILE__, __LINE__, \
+                                 "'" #val "' Must be non NULL", (val))
 
-}  // namespace zynamics
+}  // namespace security::pawn
 
 template <typename T, size_t N>
 char (&ArraySizeHelper(T (&array)[N]))[N];

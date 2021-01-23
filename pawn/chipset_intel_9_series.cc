@@ -14,12 +14,10 @@
 
 #include "pawn/chipset_intel_9_series.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 Intel9SeriesChipset::Intel9SeriesChipset(const Chipset::HardwareId& probed_id,
                                          Pci* pci)
     : Intel8SeriesChipset(probed_id, pci) {}
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn

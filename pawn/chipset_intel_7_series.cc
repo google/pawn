@@ -17,12 +17,10 @@
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 Intel7SeriesChipset::Intel7SeriesChipset(const Chipset::HardwareId& probed_id,
                                          Pci* pci)
     : Intel6SeriesChipset(probed_id, pci) {}
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn

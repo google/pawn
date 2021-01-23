@@ -17,8 +17,7 @@
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 Intel6SeriesChipset::Intel6SeriesChipset(const Chipset::HardwareId& probed_id,
                                          Pci* pci)
@@ -45,5 +44,4 @@ Chipset::Gcs Intel6SeriesChipset::ReadGcsRegister() {
   };
 }
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn

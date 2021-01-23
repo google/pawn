@@ -35,8 +35,7 @@
 
 ABSL_FLAG(bool, logo, true, "display version/copyright information");
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 namespace {
 
 int PawnMain(int argc, char* argv[]) {
@@ -50,7 +49,6 @@ int PawnMain(int argc, char* argv[]) {
 
   const char* dump_filename = parsed_argv.size() ==
       2 ? parsed_argv[1] : "bios_via_spi_hs.bin";
-  absl::PrintF("%d", parsed_argv.size());
   QCHECK(parsed_argv.size() <= 2);  // NOLINT
 
   if (absl::GetFlag(FLAGS_logo)) {
@@ -201,9 +199,8 @@ int PawnMain(int argc, char* argv[]) {
 }
 
 }  // anonymous namespace
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
 
 int main(int argc, char* argv[]) {
-  return security::zynamics::PawnMain(argc, argv);
+  return security::pawn::PawnMain(argc, argv);
 }

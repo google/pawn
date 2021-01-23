@@ -17,8 +17,7 @@
 #include "pawn/mini_google.h"
 #include "pawn/pci.h"
 
-namespace security {
-namespace zynamics {
+namespace security::pawn {
 
 Pci::~Pci() {
   iopl(0 /* Reset to ring 0 access. */);  // Ignore error.
@@ -70,5 +69,4 @@ DEFINE_READCONFIGUINT(Pci::ReadConfigUint16, uint16, inw);
 DEFINE_READCONFIGUINT(Pci::ReadConfigUint32, uint32, inl);
 #undef DEFINE_READCONFIGUINT
 
-}  // namespace zynamics
-}  // namespace security
+}  // namespace security::pawn
