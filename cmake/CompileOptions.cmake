@@ -12,6 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Compiler checks
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")  # GCC
+  set(_pawn_compiler_supported TRUE)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")  # Clang or Apple Clang
+  set(_pawn_compiler_supported TRUE)
+
+  include(Sanitizers)
+else()
+  message(WARNING "Unsupported compiler: ${CMAKE_CXX_COMPILER_ID}")
+endif()
+
 # These affect ABI and linking, so set them globally, even for dependencies
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 17)
@@ -20,5 +31,6 @@ set(CMAKE_CXX_EXTENSIONS FALSE)
 set(CMAKE_SKIP_BUILD_RPATH TRUE)
 set(CMAKE_POSITION_INDEPENDENT_CODE TRUE)
 
-# Enforce static linkage
-set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_STATIC_LIBRARY_SUFFIX})
+if(_pawn_compiler_supported)
+  add_compile_options(-fno-exceptions)
+endif()

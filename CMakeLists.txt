@@ -16,6 +16,12 @@ cmake_minimum_required(VERSION 3.14)
 cmake_policy(VERSION 3.14)
 project(pawn VERSION 0.2)
 
+# System checks
+if(NOT UNIX)
+  # Pawn currently only supports Linux. The BSDs _may_ also work.
+  message(FATAL_ERROR "Unsupported OS: ${CMAKE_SYSTEM_NAME}")
+endif()
+
 # Pawn settings
 set(PAWN_BINARY_DIR "${PROJECT_BINARY_DIR}" CACHE INTERNAL "" FORCE)
 set(PAWN_SOURCE_DIR "${PROJECT_SOURCE_DIR}" CACHE INTERNAL "" FORCE)
@@ -26,6 +32,7 @@ list(APPEND CMAKE_MODULE_PATH "${PAWN_SOURCE_DIR}/cmake")
 
 # CMake modules, order matters
 include(GNUInstallDirs)
+include(CheckCXXCompilerFlag)
 include(CompileOptions)
 include(PawnDeps)
 
