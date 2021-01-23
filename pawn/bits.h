@@ -25,9 +25,9 @@ namespace security::pawn::bits {
 // Extracts from "bits" the raw (unshifted) bit pattern between the specified
 // most-significant and least-significant bits (inclusive).
 // Examples:
-//   QCHECK_EQ(bits::Raw<15, 15>(0xFFFF), 0x8000);  // 1000 0000 0000 0000
-//   QCHECK_EQ(bits::Raw<6, 2>(0xFF), 0x7C);        //           0111 1100
-template <int kMsb, int kLsb, typename UintT>
+//   QCHECK_EQ(bits::Raw<15>(0xFFFF), 0x8000);  // 1000 0000 0000 0000
+//   QCHECK_EQ(bits::Raw<6, 2>(0xFF), 0x7C);    //           0111 1100
+template <int kMsb, int kLsb = kMsb, typename UintT>
 constexpr UintT Raw(UintT bits) {
   return bits & (static_cast<UintT>(1 << kMsb) - 1) << kLsb;
 }
@@ -36,9 +36,9 @@ constexpr UintT Raw(UintT bits) {
 // most-significant and least-significant bits (inclusive). This is equivalent
 // to right-shifting bits::Raw<>() by the index of its least-significant bit.
 // Examples:
-//   QCHECK_EQ(bits::Value<15, 15>(0xFFFF), 1);
+//   QCHECK_EQ(bits::Value<15>(0xFFFF), 1);
 //   QCHECK_EQ(bits::Value<6, 2>(0xFF), 0x1F);
-template <int kMsb, int kLsb, typename UintT>
+template <int kMsb, int kLsb = kMsb, typename UintT>
 constexpr UintT Value(UintT bits) {
   return bits >> kLsb & ((1 << (kMsb - kLsb + 1)) - 1);
 }
@@ -52,9 +52,9 @@ constexpr bool Test(UintT bits) {
 // Constructs a new value between the specified most-significant and
 // least-significant bits (inclusive).
 // Examples:
-//   QCHECK_EQ(bits::Set<15, 15>(1), 0x8000);  // 1000 0000 0000 0000
-//   QCHECK_EQ(bits::Set<6, 2>(0x1F), 0x7C);   //           0111 1100
-template <int kMsb, int kLsb, typename UintT>
+//   QCHECK_EQ(bits::Set<15>(1), 0x8000);     // 1000 0000 0000 0000
+//   QCHECK_EQ(bits::Set<6, 2>(0x1F), 0x7C);  //           0111 1100
+template <int kMsb, int kLsb = kMsb, typename UintT>
 constexpr UintT Set(UintT value) {
   return (value & ((1 << (kMsb - kLsb + 1)) - 1)) << kLsb;
 }
