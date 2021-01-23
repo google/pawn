@@ -21,12 +21,8 @@
 
 namespace security::pawn {
 
-IntelIch8Chipset::IntelIch8Chipset(const Chipset::HardwareId& probed_id,
-                                   Pci* pci)
-    : Chipset(probed_id, pci) {}
-
 Chipset::BiosCntl IntelIch8Chipset::ReadBiosCntlRegister() {
-  auto bios_cntl = pci()->ReadConfigUint8(kBiosCntlRegister);
+  auto bios_cntl = pci().ReadConfigUint8(kBiosCntlRegister);
   return {
       0,                         // Reserved, SMM_BWP on PCH platforms.
       bits::Test<4>(bios_cntl),  // TSS
@@ -38,7 +34,7 @@ Chipset::BiosCntl IntelIch8Chipset::ReadBiosCntlRegister() {
 }
 
 Chipset::Rcba IntelIch8Chipset::ReadRcbaRegister() {
-  auto rcba = pci()->ReadConfigUint32(kRcbaRegister);
+  auto rcba = pci().ReadConfigUint32(kRcbaRegister);
   return {bits::Raw<31, 14>(rcba), bits::Test<0>(rcba)};  // See p. 475
 }
 

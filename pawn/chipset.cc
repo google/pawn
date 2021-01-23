@@ -16,7 +16,9 @@
 
 #include "pawn/chipset.h"
 
+#include "absl/memory/memory.h"
 #include "absl/status/status.h"
+#include "absl/status/statusor.h"
 #include "pawn/chipset_intel_6_series.h"
 #include "pawn/chipset_intel_7_series.h"
 #include "pawn/chipset_intel_8_series.h"
@@ -30,53 +32,41 @@
 
 namespace security::pawn {
 
-Chipset::Chipset(const Chipset::HardwareId& probed_id, Pci* pci)
-    : hardware_id_(probed_id), pci_(pci), rcrb_mem_(nullptr) {}
-
-Chipset::~Chipset() = default;
-
-std::unique_ptr<Chipset> Chipset::Create(Pci* pci,
-                                         Chipset::HardwareId* probed_id,
-                                         absl::Status* status) {
-  CHECK_NOTNULL(pci);
-  CHECK_NOTNULL(status);
-  const Chipset::HardwareId hw_id = {pci->ReadConfigUint16(pci::kVidRegister),
-                                     pci->ReadConfigUint16(pci::kDidRegister),
-                                     pci->ReadConfigUint8(pci::kRidRegister)};
-  if (probed_id) {
-    *probed_id = hw_id;
-  }
+absl::StatusOr<std::unique_ptr<Chipset>> Chipset::Create(
+    Pci& pci, Chipset::HardwareId& probed_id) {
+  const Chipset::HardwareId hw_id = {pci.ReadConfigUint16(pci::kVidRegister),
+                                     pci.ReadConfigUint16(pci::kDidRegister),
+                                     pci.ReadConfigUint8(pci::kRidRegister)};
+  probed_id = hw_id;
   if (hw_id.vendor != 0x8086 /* Intel */) {
-    *status =
-        absl::UnimplementedError("Only Intel chipsets are currently supported");
-    return nullptr;
+    return absl::UnimplementedError(
+        "Only Intel chipsets are currently supported");
   }
 
   if (IntelIch8Chipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new IntelIch8Chipset(hw_id, pci));
+    return absl::make_unique<IntelIch8Chipset>(Tag{}, hw_id, pci);
   }
   if (IntelIch9Chipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new IntelIch9Chipset(hw_id, pci));
+    return absl::make_unique<IntelIch9Chipset>(Tag{}, hw_id, pci);
   }
   if (IntelIch10Chipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new IntelIch10Chipset(hw_id, pci));
+    return absl::make_unique<IntelIch10Chipset>(Tag{}, hw_id, pci);
   }
   if (Intel6SeriesChipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new Intel6SeriesChipset(hw_id, pci));
+    return absl::make_unique<Intel6SeriesChipset>(Tag{}, hw_id, pci);
   }
   if (Intel7SeriesChipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new Intel7SeriesChipset(hw_id, pci));
+    return absl::make_unique<Intel7SeriesChipset>(Tag{}, hw_id, pci);
   }
   if (Intel8SeriesChipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new Intel8SeriesChipset(hw_id, pci));
+    return absl::make_unique<Intel8SeriesChipset>(Tag{}, hw_id, pci);
   }
   if (Intel9SeriesChipset::SupportsDevice(hw_id)) {
-    return std::unique_ptr<Chipset>(new Intel9SeriesChipset(hw_id, pci));
+    return absl::make_unique<Intel9SeriesChipset>(Tag{}, hw_id, pci);
   }
 
-  *status =
-      absl::UnimplementedError("Unsupported Intel chipset, check hardware id.");
-  return nullptr;
+  return absl::UnimplementedError(
+      "Unsupported Intel chipset, check hardware id.");
 }
 
 const Chipset::HardwareId& Chipset::hardware_id() const {
@@ -91,8 +81,12 @@ absl::Status Chipset::MapRootComplex(const Chipset::Rcba& rcba) {
   // The size of the root complex is aligned on 4KiB. All Intel chipsets
   // released 2008 or later have 4 pages mapped.
   // See Chipset Configuration Registers (Memory Space), p. 275-276
-  rcrb_mem_ =
-      PhysicalMemory::Create(rcba.base_address, 0x4000 /* 16KiB */, &status);
+
+  auto mem_or = PhysicalMemory::Create(rcba.base_address, 0x4000 /* 16KiB */);
+  if (!mem_or.ok()) {
+    return mem_or.status();
+  }
+  rcrb_mem_ = std::move(mem_or).value();
   return status;
 }
 
@@ -177,10 +171,6 @@ absl::Status Chipset::ReadSpiWithHardwareSequencing(
     block_read_done();
   }
   return absl::OkStatus();
-}
-
-Pci* Chipset::pci() {
-  return pci_;
 }
 
 PhysicalMemory* Chipset::rcrb_mem() {

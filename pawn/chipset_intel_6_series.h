@@ -38,13 +38,12 @@ class Intel6SeriesChipset : public IntelIch10Chipset {
             id.device == 0x1D41 /* X79 Express (HP z240) */);
   }
 
+  Intel6SeriesChipset(Chipset::Tag tag, const Chipset::HardwareId& probed_id,
+                      Pci& pci)
+      : IntelIch10Chipset(tag, probed_id, pci) {}
+
   BiosCntl ReadBiosCntlRegister() override;
   Chipset::Gcs ReadGcsRegister() override;
-
- protected:
-  friend class Chipset;
-
-  Intel6SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
 };
 
 }  // namespace security::pawn

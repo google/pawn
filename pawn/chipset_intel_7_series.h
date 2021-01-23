@@ -40,10 +40,9 @@ class Intel7SeriesChipset : public Intel6SeriesChipset {
             id.device == 0x1E5F /* NM70 */);
   }
 
- protected:
-  friend class Chipset;
-
-  Intel7SeriesChipset(const Chipset::HardwareId& probed_id, Pci* pci);
+  Intel7SeriesChipset(Chipset::Tag tag, const Chipset::HardwareId& probed_id,
+                      Pci& pci)
+      : Intel6SeriesChipset(tag, probed_id, pci) {}
 };
 
 }  // namespace security::pawn

@@ -27,15 +27,17 @@ namespace security::pawn {
 // 313056-004).
 class IntelIch8Chipset : public Chipset {
  public:
+  // BIOS Control Register (Page 360, 8-bit)
+  static constexpr uint32_t kBiosCntlRegister =
+      pci::MakeConfigAddress(0x00, 31, 0, 0xDC);
+  // Root Complex Base Address Register (Page 363, 32-bit)
+  static constexpr uint32_t
+      kRcbaRegister = pci::MakeConfigAddress(0x00, 31, 0, 0xF0);
+
+      // General Control and Status Register (Page 405, 32-bit)
+  static constexpr uint32_t kGcsRegister = 0x3410;
+
   enum {
-    // BIOS Control Register (Page 360, 8-bit)
-    kBiosCntlRegister = pci::MakeConfigAddress(0x00, 31, 0, 0xDC),
-    // Root Complex Base Address Register (Page 363, 32-bit)
-    kRcbaRegister = pci::MakeConfigAddress(0x00, 31, 0, 0xF0),
-
-    // General Control and Status Register (Page 405, 32-bit)
-    kGcsRegister = 0x3410,
-
     kBfprRegisterOffset = 0x00,
     kHsfsRegisterOffset = 0x04,
     kHsfcRegisterOffset = 0x06,
@@ -58,6 +60,9 @@ class IntelIch8Chipset : public Chipset {
             id.device == 0x2811 /* ICH8M-E */);
   }
 
+  IntelIch8Chipset(Chipset::Tag, const Chipset::HardwareId& probed_id, Pci& pci)
+      : Chipset(probed_id, pci) {}
+
   BiosCntl ReadBiosCntlRegister() override;
   Chipset::Rcba ReadRcbaRegister() override;
 
@@ -75,9 +80,6 @@ class IntelIch8Chipset : public Chipset {
   Chipset::Ssfc ReadSsfcRegister() override;
 
  protected:
-  friend class Chipset;
-  IntelIch8Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
-
   uint16_t SpiBar(int offset) const override {
     return 0x3020 + offset;  // Page 747
   }

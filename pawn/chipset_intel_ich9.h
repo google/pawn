@@ -39,11 +39,11 @@ class IntelIch9Chipset : public IntelIch8Chipset {
             id.device == 0x2919 /* ICH9M */);
   }
 
+  IntelIch9Chipset(Chipset::Tag tag, const Chipset::HardwareId& probed_id,
+                   Pci& pci)
+      : IntelIch8Chipset(tag, probed_id, pci) {}
+
  protected:
-  friend class Chipset;
-
-  IntelIch9Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
-
   uint16_t SpiBar(int offset) const override {
     return 0x3800 + offset;  // Page 821
   }

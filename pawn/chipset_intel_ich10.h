@@ -36,10 +36,9 @@ class IntelIch10Chipset : public IntelIch9Chipset {
             id.device == 0x3A18 /* ICH10 (Consumer Base) */);
   }
 
- protected:
-  friend class Chipset;
-
-  IntelIch10Chipset(const Chipset::HardwareId& probed_id, Pci* pci);
+  IntelIch10Chipset(Chipset::Tag tag, const Chipset::HardwareId& probed_id,
+                    Pci& pci)
+      : IntelIch9Chipset(tag, probed_id, pci) {}
 };
 
 }  // namespace security::pawn

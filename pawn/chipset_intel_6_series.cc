@@ -20,12 +20,8 @@
 
 namespace security::pawn {
 
-Intel6SeriesChipset::Intel6SeriesChipset(const Chipset::HardwareId& probed_id,
-                                         Pci* pci)
-    : IntelIch10Chipset(probed_id, pci) {}
-
 Chipset::BiosCntl Intel6SeriesChipset::ReadBiosCntlRegister() {
-  auto bios_cntl = pci()->ReadConfigUint8(kBiosCntlRegister);
+  auto bios_cntl = pci().ReadConfigUint8(kBiosCntlRegister);
   return {
       bits::Test<5>(bios_cntl),  // SMM_BWP
       bits::Test<4>(bios_cntl),  // TSS
