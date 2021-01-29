@@ -50,7 +50,7 @@ absl::StatusOr<Pci> Pci::Create() {
 
   Pci pci;
   pci.iopl_done_ = true;
-  return pci;
+  return std::move(pci);  // GCC 7 needs the extra move
 }
 
 enum {

@@ -42,7 +42,7 @@ absl::StatusOr<std::unique_ptr<PhysicalMemory>> PhysicalMemory::Create(
   if (auto status = mem->Init(physical_offset, length); !status.ok()) {
     return status;
   }
-  return mem;
+  return mem;  // GCC 7 needs the extra move
 }
 
 absl::Status PhysicalMemory::Init(uintptr_t physical_offset, size_t length) {
