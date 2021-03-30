@@ -85,6 +85,7 @@ add_executable(pawn
 )
 target_link_libraries(pawn
   pawn_base
+  absl::cleanup
   absl::flags
   absl::flags_parse
   absl::flags_usage

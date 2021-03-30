@@ -21,10 +21,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iomanip>
-#include <memory>
 #include <vector>
 
 #include "absl/base/macros.h"
+#include "absl/cleanup/cleanup.h"
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/flags/usage.h"
@@ -163,16 +163,12 @@ int PawnMain(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  std::unique_ptr<FILE, void (*)(FILE*)> dump(fopen(dump_filename, "wb"),
-                                              [](FILE* f) {
-                                                if (f) {
-                                                  fclose(f);
-                                                }
-                                              });
+  FILE* dump = fopen(dump_filename, "wb");
   if (dump == nullptr) {
     absl::PrintF("Error: Could not open output file for writing.\n");
     return EXIT_FAILURE;
   }
+  auto dump_closer = [dump] { fclose(dump); };
 
   enum {
     kBlockSize = 64,
@@ -195,7 +191,7 @@ int PawnMain(int argc, char* argv[]) {
           fflush(STDIN_FILENO);
         }
         if (fwrite(static_cast<const void*>(data), 1 /* Size */, kBlockSize,
-                   dump.get()) != kBlockSize) {
+                   dump) != kBlockSize) {
           LOG(FATAL) << "Could not write " << kBlockSize << " bytes.";
         }
         return true;
