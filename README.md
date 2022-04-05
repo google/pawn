@@ -1,6 +1,6 @@
 # Pawn BIOS Dumping Tool
 
-Copyright 2014-2021 Google LLC.
+Copyright 2014-2022 Google LLC.
 
 [![Linux Build Status](https://github.com/google/pawn/workflows/linux-build/badge.svg)](https://github.com/google/pawn/actions?query=workflow%3Alinux-build)
 
