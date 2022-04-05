@@ -9,6 +9,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-20.04]
 
@@ -29,8 +30,7 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
       run: |
         cmake "${GITHUB_WORKSPACE}" -G Ninja \
-          "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" \
-          "-DIdaSdk_ROOT_DIR=${{ runner.workspace }}/build/idasdk75"
+          "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 
     - name: Build
       working-directory: ${{ runner.workspace }}/build
