@@ -27,15 +27,9 @@ find_package(Git)
 # Abseil
 FetchContent_Declare(absl
   GIT_REPOSITORY https://github.com/abseil/abseil-cpp
-  GIT_TAG        a09b5de0d57d7b2179210989ab63361c3c1894f5 # 2021-03-25
+  GIT_TAG        6f43f5bb398b6685575b36874e36cf1695734df1 # 2022-04-04
 )
 set(ABSL_CXX_STANDARD ${CMAKE_CXX_STANDARD} CACHE STRING "" FORCE)
 set(ABSL_USE_EXTERNAL_GOOGLETEST ON CACHE BOOL "" FORCE)
-# Workaround CMake issue in Abseil
-# FetchContent_MakeAvailable(absl)
-if(NOT absl_POPULATED)
-  FetchContent_Populate(absl)
-  add_subdirectory(${absl_SOURCE_DIR} ${absl_BINARY_DIR})
-  add_subdirectory(${absl_SOURCE_DIR}/absl/cleanup ${absl_BINARY_DIR}/absl/cleanup)
-endif()
+FetchContent_MakeAvailable(absl)
 pawn_check_target(absl::core_headers)
