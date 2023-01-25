@@ -23,15 +23,6 @@ target_link_libraries(pawn_bits PRIVATE
   pawn_base
 )
 
-add_library(pawn_util STATIC
-  mini_google.h
-)
-add_library(pawn::util ALIAS pawn_util)
-set_target_properties(pawn_util PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(pawn_util PRIVATE
-  pawn_base
-)
-
 add_library(pawn_memory STATIC
   physical_memory.cc
   physical_memory.h
@@ -71,12 +62,13 @@ add_library(pawn_chipsets STATIC
 add_library(pawn::chipsets ALIAS pawn_chipsets)
 target_link_libraries(pawn_chipsets PRIVATE
   pawn_base
+  absl::die_if_null
+  absl::log
   absl::status
   absl::statusor
   pawn::bits
   pawn::memory
   pawn::pci
-  pawn::util
 )
 
 add_executable(pawn
@@ -93,9 +85,9 @@ target_link_libraries(pawn
   absl::str_format
   absl::strings
   pawn::chipsets
+  absl::log
   pawn::memory
   pawn::pci
-  pawn::util
 )
 
 install(TARGETS pawn DESTINATION ${CMAKE_INSTALL_SBINDIR})

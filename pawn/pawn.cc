@@ -24,14 +24,14 @@
 #include <vector>
 
 #include "absl/base/macros.h"
-#include "absl/cleanup/cleanup.h"
+#include "absl/log/check.h"
+#include "absl/log/log.h"
 #include "absl/flags/flag.h"
 #include "absl/flags/parse.h"
 #include "absl/flags/usage.h"
 #include "absl/status/status.h"
 #include "absl/strings/str_format.h"
 #include "pawn/chipset.h"
-#include "pawn/mini_google.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 #include "pawn/version.h"

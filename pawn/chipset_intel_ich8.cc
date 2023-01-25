@@ -14,8 +14,8 @@
 
 #include "pawn/chipset_intel_ich8.h"
 
+#include "absl/log/log.h"
 #include "pawn/bits.h"
-#include "pawn/mini_google.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 

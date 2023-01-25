@@ -16,6 +16,8 @@
 
 #include "pawn/chipset.h"
 
+#include "absl/log/die_if_null.h"
+#include "absl/log/log.h"
 #include "absl/memory/memory.h"
 #include "absl/status/status.h"
 #include "absl/status/statusor.h"
@@ -26,7 +28,6 @@
 #include "pawn/chipset_intel_ich10.h"
 #include "pawn/chipset_intel_ich8.h"
 #include "pawn/chipset_intel_ich9.h"
-#include "pawn/mini_google.h"
 #include "pawn/pci.h"
 #include "pawn/physical_memory.h"
 
@@ -113,7 +114,7 @@ absl::Status Chipset::ReadSpiWithHardwareSequencing(
   // The whole process is repeated until size / block_size blocks have been
   // read.
 
-  CHECK_NOTNULL(block_read);
+  ABSL_DIE_IF_NULL(block_read);
   if (block_size < 4 || block_size > 64 /* Chipset limit */) {
     // We do not support reading less than 32-bit here.
     return absl::InvalidArgumentError(
