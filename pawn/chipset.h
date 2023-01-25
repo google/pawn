@@ -93,7 +93,7 @@ class Chipset {
     uint32_t bios_flash_primary_region_base;   // PRB
   };
 
-  enum BlockSectorEraseSize {
+  enum BlockSectorEraseSize : uint32_t {
     kBerase256Kb = 0,
     kBerase4Kb,
     kBerase8KbOrReserved,

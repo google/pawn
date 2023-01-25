@@ -34,7 +34,14 @@ list(APPEND CMAKE_MODULE_PATH "${PAWN_SOURCE_DIR}/cmake")
 include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
 include(CompileOptions)
+include(PawnOptions)
 include(PawnDeps)
+
+include(CTest)
+if(BUILD_TESTING AND PAWN_BUILD_TESTING)
+  include(GoogleTest)
+  enable_testing()
+endif()
 
 # Find the Git revision number, if applicable
 set(pawn_REVISION unknown)
@@ -55,5 +62,16 @@ target_include_directories(pawn_base INTERFACE
   ${PAWN_SOURCE_DIR}
   ${PAWN_BINARY_DIR}  # For generated files
 )
+add_library(pawn::base ALIAS pawn_base)
+
+if(BUILD_TESTING AND PAWN_BUILD_TESTING)
+  # Interface library to be used by tests
+  add_library(pawn_test_base INTERFACE)
+  target_link_libraries(pawn_test_base INTERFACE
+    gtest_main
+    gmock
+  )
+  add_library(pawn::test_base ALIAS pawn_test_base)
+endif()
 
 add_subdirectory(pawn)

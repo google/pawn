@@ -22,6 +22,16 @@ set_target_properties(pawn_bits PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(pawn_bits PRIVATE
   pawn_base
 )
+if(BUILD_TESTING AND PAWN_BUILD_TESTING)
+  add_executable(pawn_bits_test
+    bits_test.cc
+  )
+  target_link_libraries(pawn_bits_test PUBLIC
+    pawn::base
+    pawn::test_base
+  )
+  gtest_discover_tests(pawn_bits_test)
+endif()
 
 add_library(pawn_memory STATIC
   physical_memory.cc
@@ -39,7 +49,7 @@ add_library(pawn_pci STATIC
 )
 add_library(pawn::pci ALIAS pawn_pci)
 target_link_libraries(pawn_pci PRIVATE
-  pawn_base
+  pawn::base
   absl::status
   absl::statusor
   pawn::bits
