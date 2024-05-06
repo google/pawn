@@ -11,13 +11,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04]
+        os: [ubuntu-22.04]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Install ninja-build tool
-      uses: seanmiddleditch/gha-setup-ninja@v3
+      uses: turtlesec-no/get-ninja@1.1.0
 
     - name: Create Build Environment
       env:
