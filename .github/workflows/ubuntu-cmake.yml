@@ -36,6 +36,13 @@ jobs:
       working-directory: ${{ runner.workspace }}/build
       run: cmake --build . --config "${BUILD_TYPE}"
 
-    #- name: Test
-    #  working-directory: ${{ runner.workspace }}/build
-    #  run: ctest --build-config "${BUILD_TYPE}" --output-on-failure
+    - name: Test
+      working-directory: ${{ runner.workspace }}/build
+      run: ctest --build-config "${BUILD_TYPE}" --output-on-failure
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: pawn-${{ runner.os }}
+        path: |
+          ${{ runner.workspace }}/build/pawn/pawn
