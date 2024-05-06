@@ -1,4 +1,4 @@
-# Copyright 2014-2023 Google LLC
+# Copyright 2014-2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Linux Makefile to build the pawn command line tool.
+# Linux Makefile utility
 
 this_dir := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
 
