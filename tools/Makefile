@@ -52,6 +52,7 @@ $(source_only_tgz):
 updatesourcemeta:
 	@echo "  [Update]    Version and copyright"
 	@for i in \
+		$(this_dir)/../cmake/*.cmake \
 		$(this_dir)/../debian/copyright \
 		$(this_dir)/../debian/rules \
 		$(this_dir)/../pawn/*.cc \
