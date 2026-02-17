@@ -1,4 +1,4 @@
-# Copyright 2014-2023 Google LLC
+# Copyright 2014-2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.14)
-cmake_policy(VERSION 3.14)
+cmake_minimum_required(VERSION 3.31)
+cmake_policy(VERSION 3.31)
 project(pawn VERSION 0.2)
 
 # System checks

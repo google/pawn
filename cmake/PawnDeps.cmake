@@ -1,4 +1,4 @@
-# Copyright 2014-2024 Google LLC
+# Copyright 2014-2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ find_package(Git)
 # Abseil
 FetchContent_Declare(absl
   GIT_REPOSITORY https://github.com/abseil/abseil-cpp
-  GIT_TAG        c1e1b47d989978cde8c5a2a219df425b785a0c47 # 2024-05-03
+  GIT_TAG        586a3fbe2a985e8eaf8e54c5b80731a22af49ae1 # 2026-02-15
 )
 set(ABSL_CXX_STANDARD ${CMAKE_CXX_STANDARD} CACHE STRING "" FORCE)
 set(ABSL_PROPAGATE_CXX_STD ON CACHE BOOL "" FORCE)
@@ -39,7 +39,7 @@ if(BUILD_TESTING AND PAWN_BUILD_TESTING)
   # Googletest (needs to come after Abseil due to C++ standard propagation)
   FetchContent_Declare(googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        2d16ed055d09c3689d44b272adc097393de948a0 # 2024-05-03
+    GIT_TAG        77f6bd3e75a2e7d3c67a024893417de42f58c418 # 2026-02-12
   )
   FetchContent_MakeAvailable(googletest)
   pawn_check_target(gtest)

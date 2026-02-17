@@ -1,6 +1,6 @@
 # Pawn BIOS Dumping Tool
 
-Copyright 2014-2024 Google LLC.
+Copyright 2014-2026 Google LLC.
 
 [![Linux Build Status](https://github.com/google/pawn/workflows/linux-build/badge.svg)](https://github.com/google/pawn/actions?query=workflow%3Alinux-build)
 
@@ -18,7 +18,7 @@ The name is a play on an internal tool that is also named after a chess piece.
 Dependencies:
   * Linux on x86_64 (uses `/dev/mem`). FreeBSD might also work.
   * GCC >= 7 or Clang >= 7
-  * CMake >= 3.14
+  * CMake >= 3.31
   * Ninja or GNU Make
 
 To build:

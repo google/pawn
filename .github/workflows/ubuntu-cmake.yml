@@ -10,39 +10,40 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04]
+        os: [ubuntu-24.04]
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
-    - name: Install ninja-build tool
-      uses: turtlesec-no/get-ninja@1.1.0
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@latest
+      with:
+        cmakeVersion: "~3.31.0"
+        ninjaVersion: "~1.12.0"
 
     - name: Create Build Environment
-      env:
-        RUNNER_WORKSPACE: ${{ runner.workspace }}
       working-directory: ${{ github.workspace }}
       run: |
-        cmake -E make_directory "${RUNNER_WORKSPACE}/build"
+        cmake -E make_directory "${GITHUB_WORKSPACE}/build"
 
     - name: Configure CMake
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ github.workspace }}/build
       run: |
         cmake "${GITHUB_WORKSPACE}" -G Ninja \
           "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}"
 
     - name: Build
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ github.workspace }}/build
       run: cmake --build . --config "${BUILD_TYPE}"
 
     - name: Test
-      working-directory: ${{ runner.workspace }}/build
+      working-directory: ${{ github.workspace }}/build
       run: ctest --build-config "${BUILD_TYPE}" --output-on-failure
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: pawn-${{ runner.os }}
         path: |
-          ${{ runner.workspace }}/build/pawn/pawn
+          ${{ github.workspace }}/build/pawn/pawn
